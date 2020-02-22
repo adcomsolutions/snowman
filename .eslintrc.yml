@@ -80,7 +80,7 @@ rules:
   max-len:
     - 2
     - code: 80
-      tabWidth: 2
+      tabWidth: 4
       ignoreUrls: true
       ignoreStrings: true
       ignoreTemplateLiterals: true

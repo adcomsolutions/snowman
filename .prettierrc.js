@@ -7,7 +7,7 @@
 module.exports = {
   // Same as .editorconfig (and also default values)
   printWidth: 80,
-  tabWidth: 2,
+  tabWidth: 4,
   useTabs: false,
 
   // Same as default values
