@@ -13,7 +13,7 @@ const ignoredGlobals = {
   Class: 'Class'
 }
 
-const bundleBanner = `// Rollup file built on ${new Date().toGMTString()}}`
+const bundleBanner = `// Rollup file built on ${new Date().toGMTString()}`
 
 const librariesP = glob(`${libDir}/*/**.js`)
 
