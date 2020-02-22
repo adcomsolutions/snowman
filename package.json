@@ -19,6 +19,9 @@
         "url": "TODO"
     },
     "homepage": "adcomsolutions.com",
+    "scripts": {
+        "lint": "eslint --fix *.js src/**/*.js"
+    },
     "dependencies": {
         "@babel/core": "^7.8.3",
         "@babel/plugin-transform-arrow-functions": "^7.8.0",
