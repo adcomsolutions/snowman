@@ -16,5 +16,6 @@ plugins:
 rules:
     prettier/prettier: error
     unicorn/prevent-abbreviations: off
+    unicorn/filename-case: off
     no-console: error
     no-undef: off
