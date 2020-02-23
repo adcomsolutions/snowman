@@ -20,7 +20,7 @@
     },
     "homepage": "adcomsolutions.com",
     "scripts": {
-        "lint": "eslint --fix *.js src/**/*.js"
+        "lint": "eslint --fix \"**/*.js\" *.js \".*.js\""
     },
     "dependencies": {
         "@babel/core": "^7.8.3",
