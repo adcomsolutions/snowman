@@ -4,15 +4,19 @@ import fs from 'fs-extra';
 import path from 'path';
 import glob from 'fast-glob';
 
-const auxFileDir = 'lib';
-const polyfillFile = path.join(__dirname, auxFileDir, 'rhino-polyfills.js');
-const libDir = path.join(__dirname, 'src');
 const jsExt = '.js';
+const libDir = path.join(__dirname, 'src');
+const auxDir = path.join(__dirname, 'lib');
+const polyfillFile = path.join(auxDir, 'rhino-polyfills.js');
 
 // Only global imports from the top level modules need to go here
 const ignoredGlobals = {
     global: 'global',
     Class: 'Class',
+};
+
+const auxGlobals = {
+    ClientIncludes: '(global.AbstractAjaxProcessor || AbstractAjaxProcessor)',
 };
 
 const bundleBanner = `// Rollup file built on ${new Date().toGMTString()}`;
@@ -57,6 +61,7 @@ export default async (args) => {
         input: inputFile,
         external: [
             ...Object.keys(ignoredGlobals),
+            ...Object.keys(auxGlobals),
             ...libraries.map(externalify),
         ],
         output: {
@@ -65,7 +70,12 @@ export default async (args) => {
             format: 'iife',
             name: inputBase,
             strict: false,
-            globals: { ...globalifyLibs(libraries), ...ignoredGlobals },
+            interop: false,
+            globals: {
+                ...globalifyLibs(libraries),
+                ...auxGlobals,
+                ...ignoredGlobals,
+            },
         },
         plugins: rollupBabel({
             exclude: 'node_modules/**',

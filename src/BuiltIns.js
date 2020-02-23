@@ -8,4 +8,5 @@ export default {
     booleans,
     dates,
     numbers,
+    type: 'BuiltIns',
 };

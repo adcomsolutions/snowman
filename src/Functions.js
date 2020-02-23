@@ -6,4 +6,5 @@ export default {
     tests,
     hofs,
     utils,
+    type: 'Functions',
 };
