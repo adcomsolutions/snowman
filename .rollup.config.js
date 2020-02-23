@@ -2,18 +2,23 @@ import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import rollupBabel from 'rollup-plugin-babel'
 
+import fs from 'fs-extra'
 import path from 'path'
 import glob from 'fast-glob'
 
+const auxFileDir = 'lib'
+const polyfillFile = path.join(__dirname, auxFileDir, 'rhino-polyfills.js')
 const libDir = path.join(__dirname, 'src')
 const jsExt = '.js'
 
+// Only global imports from the top level modules need to go here
 const ignoredGlobals = {
   global: 'global',
   Class: 'Class'
 }
 
 const bundleBanner = `// Rollup file built on ${new Date().toGMTString()}`
+const bundleIntroP = fs.readFile(polyfillFile, 'utf8')
 
 const librariesP = glob(`${libDir}/*/**.js`)
 
@@ -58,6 +63,7 @@ export default async (args) => {
     external: [...Object.keys(ignoredGlobals), ...libraries.map(externalify)],
     output: {
       banner: bundleBanner,
+      intro: await bundleIntroP,
       format: 'iife',
       name: inputBase,
       strict: false,
