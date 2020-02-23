@@ -10,22 +10,19 @@ module.exports = {
   tabWidth: 4,
   useTabs: false,
 
-  // Same as default values
   quoteProps: 'as-needed',
   bracketSpacing: true,
   jsxBracketSameLine: false,
   htmlWhitespaceSensitivity: 'css',
+  arrowParens: 'always',
+  semi: true,
+  singleQuote: true,
+  jsxSingleQuote: true,
+  trailingComma: 'es5',
+  proseWrap: 'always',
 
   // Same as .editorconfig (but different from default values)
   // `.gitattributes` with `* text=auto eol=lf` is also needed to prevent
   // Git from using CRLF on Windows.
   endOfLine: 'lf',
-
-  // Different from default values
-  arrowParens: 'always',
-  semi: false,
-  singleQuote: true,
-  jsxSingleQuote: true,
-  trailingComma: 'all',
-  proseWrap: 'always',
 }
