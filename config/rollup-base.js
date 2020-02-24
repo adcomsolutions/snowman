@@ -1,5 +1,5 @@
 import {getConfig} from '../src/config-helper.js'
-import {getOutputPath} from '../src/rollup-helper.js'
+import {getOutputFilePath} from '../src/rollup-helper.js'
 
 import fs from 'fs-extra';
 import rollupBabel from 'rollup-plugin-babel';
@@ -15,7 +15,7 @@ export default async (inputFile) => ({
         plugins: [rollupBabel(rollupBabelConfig)],
     },
     output: {
-        file: getOutputPath(inputFile),
+        file: getOutputFilePath(inputFile),
         banner: bundleBanner,
         intro: await bundleIntroP,
         format: 'iife',
