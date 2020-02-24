@@ -1,0 +1,25 @@
+export default {
+    exclude: 'node_modules/**',
+    plugins: [
+        ['@babel/proposal-nullish-coalescing-operator'],
+        ['@babel/proposal-optional-catch-binding'],
+        ['@babel/proposal-optional-chaining'],
+        ['@babel/transform-member-expression-literals'],
+        ['@babel/transform-property-literals'],
+        ['@babel/transform-arrow-functions'],
+        ['@babel/transform-block-scoped-functions'],
+        ['@babel/transform-block-scoping'],
+        ['@babel/transform-computed-properties', { loose: true }],
+        ['@babel/transform-destructuring', { loose: true }],
+        ['@babel/transform-literals'],
+        ['@babel/transform-parameters'],
+        ['@babel/transform-shorthand-properties'],
+        ['@babel/transform-spread', { loose: true }],
+        [
+            '@babel/transform-template-literals',
+            { loose: true, spec: true },
+        ],
+        ['@babel/transform-exponentiation-operator'],
+        ['transform-for-of-as-array'],
+    ],
+}
