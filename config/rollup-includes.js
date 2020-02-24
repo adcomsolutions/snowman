@@ -19,6 +19,10 @@ const auxGlobals = {
 
 export default async (inputFile) => {
     const inputBase = baseify(inputFile);
+
+    // Only imports included with a particular Script Include are bundled
+    // For example, Functions.mjs will bundle Functions/utils.mjs
+    // Imports for other folders, like BuiltIns/array.js, are translated to a Script Includes call
     const libraries = filterLibs(inputBase, await librariesP);
 
     return mergeRollupConfigs(await rollupBase(inputFile), {

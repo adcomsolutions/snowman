@@ -32,6 +32,9 @@ export const globalifyLibs = (libs) => {
 export const librariesP = glob(
     `${config.libDir}/${config.libPattern}/**.${config.babelExt}`
 );
+
+// Makes sure files within the same "BundleName" (folder) are bundled in
+// This means only imports associated to the named folder get in, which is what we want for ScriptIncludes
 export const filterLibs = (bundleName, libs) =>
     libs.map(externalify).filter((lib) => getLastDir(lib) !== bundleName);
 
