@@ -3,7 +3,7 @@ import { resolve, join } from 'path';
 
 const config = getConfig();
 
-export const includesAliasConfig = {
+export const mainAliasConfig = {
     entries: [
         {
             find: new RegExp(

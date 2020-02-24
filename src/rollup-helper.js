@@ -1,6 +1,7 @@
 import { getConfig } from './config-helper.js';
 import { dirName, mergeOptions, squashObjs, extractProp } from './utils.js';
 import path from 'path';
+import glob from 'fast-glob';
 
 const config = getConfig();
 
@@ -26,6 +27,11 @@ export const globalifyLibs = (libs) => {
     return squashObjs(pieces);
 };
 
+// Gets list of all "shared" libraries from the shared repo
+// Typically, this list is used to exclude those imports from normal bundles
+export const librariesP = glob(
+    `${config.libDir}/${config.libPattern}/**.${config.babelExt}`
+);
 export const filterLibs = (bundleName, libs) =>
     libs.map(externalify).filter((lib) => getLastDir(lib) !== bundleName);
 
