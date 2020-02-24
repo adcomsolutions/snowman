@@ -1,6 +1,6 @@
 import {getConfig} from '../src/config-helper.js'
 import {serverGlobals} from './snow-globals.js'
-import {externalify, baseify, globalifyLibs, filterLibs, mergeRollupConfigs} from '../src/rollup-helper.js'
+import {externalify, baseify, globalifyLibs, filterLibs, mergeRollupConfigs, stripAppName} from '../src/rollup-helper.js'
 
 const config = getConfig()
 import rollupBase from './rollup-base.js'
@@ -11,7 +11,7 @@ const auxGlobals = {
 };
 
 export default async (inputFile) => {
-    const librariesP = glob(`${config.libDir}/*/**.${config.babelExt}`);
+    const librariesP = glob(`${config.libDir}/${config.libPattern}/**.${config.babelExt}`);
     const inputBase = baseify(inputFile);
     const libraries = filterLibs(inputBase, await librariesP);
 
@@ -27,7 +27,7 @@ export default async (inputFile) => {
             },
             output: {
                 format: 'iife',
-                name: inputBase,
+                name: stripAppName(inputBase),
                 strict: false,
                 interop: false,
                 globals: {

@@ -10,12 +10,15 @@ export const getLastDir = (dir) => {
 };
 
 export const baseify = (filePath) => path.basename(filePath, `.${config.babelExt}`);
+export const stripAppName = (baseName) => baseName.replace(/^(x_.+|global)\./, '')
 
-console.log(dirName)
 export const externalify = (libName) => path.resolve(dirName, libName);
 
-export const getOutputPath = (inputPath) => `${
-    baseify(inputPath)
+export const getOutputFilePath = (inputFile) => `${
+    path.join(
+        path.dirname(inputFile),
+        baseify(inputFile)
+    )
 }.${
     config.jsExt
 }`
