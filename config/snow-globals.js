@@ -1,7 +1,5 @@
-import {squashObjs} from '../src/utils.js'
-const objectify = (list) => squashObjs(
-    list.map((item) => ({[item]: item}))
-)
+import { squashObjs } from '../src/utils.js';
+const objectify = (list) => squashObjs(list.map((item) => ({ [item]: item })));
 
 // Server list thanks to https://github.com/thisnameissoclever/sn-js-lib
 const serverGlobalList = [
@@ -92,7 +90,7 @@ const serverGlobalList = [
     'TemplateRecord',
     'User',
     'utils',
-]
+];
 
 // Client list thanks to:
 // https://docs.servicenow.com/bundle/newyork-servicenow-platform/page/build/service-portal/reference/client-script-reference.html
@@ -141,7 +139,7 @@ const clientGlobalList = [
     'spContextManager',
     'spModal',
     'spUtil',
-]
+];
 
-export const serverGlobals = objectify(serverGlobalList)
-export const clientGlobals = objectify(clientGlobalList)
+export const serverGlobals = objectify(serverGlobalList);
+export const clientGlobals = objectify(clientGlobalList);

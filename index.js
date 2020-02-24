@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import yargs from "yargs";
-import rollup from "rollup";
-import rollupIncludesConfig from "./config/rollup-includes.js";
+import yargs from 'yargs';
+import rollup from 'rollup';
+import rollupIncludesConfig from './config/rollup-includes.js';
 
-yargs.array('includes')
+yargs.array('includes');
 const argv = yargs.argv;
 
 const buildBundle = (rollupOptions) => async (inputFile) => {
@@ -13,8 +13,6 @@ const buildBundle = (rollupOptions) => async (inputFile) => {
 };
 
 const logOutputPath = async (rollupResultP) =>
-      console.log(`Built file: ${(await rollupResultP).output[0].fileName}`)
+    console.log(`Built file: ${(await rollupResultP).output[0].fileName}`);
 
-argv.includes
-    .map(buildBundle(rollupIncludesConfig))
-    .map(logOutputPath)
+argv.includes.map(buildBundle(rollupIncludesConfig)).map(logOutputPath);

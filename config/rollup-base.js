@@ -1,11 +1,11 @@
-import {getConfig} from '../src/config-helper.js'
-import {getOutputFilePath} from '../src/rollup-helper.js'
+import { getConfig } from '../src/config-helper.js';
+import { getOutputFilePath } from '../src/rollup-helper.js';
 
 import fs from 'fs-extra';
 import rollupBabel from 'rollup-plugin-babel';
-import rollupBabelConfig from './babel-rollup.js'
+import rollupBabelConfig from './babel-rollup.js';
 
-const config = getConfig()
+const config = getConfig();
 const bundleIntroP = fs.readFile(config.rhinoPolyfillPath, 'utf8');
 const bundleBanner = `// Rollup file built on ${new Date().toGMTString()}`;
 
@@ -20,6 +20,6 @@ export default async (inputFile) => ({
         intro: await bundleIntroP,
         format: 'iife',
         strict: false,
-        interop: false
-    }
-})
+        interop: false,
+    },
+});

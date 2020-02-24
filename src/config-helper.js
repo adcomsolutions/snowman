@@ -1,14 +1,10 @@
-import {mergeOptions} from './utils.js'
-import defaultConfig from '../config/default.js'
+import { mergeOptions } from './utils.js';
+import defaultConfig from '../config/default.js';
 
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
-dotenv.config()
+dotenv.config();
 
-const envConfig = {
-}
+const envConfig = {};
 
-export const getConfig = () => mergeOptions(
-    defaultConfig,
-    envConfig
-)
+export const getConfig = () => mergeOptions(defaultConfig, envConfig);
