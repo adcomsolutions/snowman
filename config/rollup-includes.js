@@ -8,7 +8,12 @@ import {
     mergeRollupConfigs,
     stripAppName,
 } from '../src/rollup-helper.js';
+
 import rollupBase from './rollup-base.js';
+import rollupBabel from 'rollup-plugin-babel';
+import rollupBabelConfig from './babel-rollup.js';
+import rollupAlias from '@rollup/plugin-alias';
+import { includesAliasConfig } from './alias-rollup.js';
 import glob from 'fast-glob';
 
 const config = getConfig();
@@ -26,6 +31,10 @@ export default async (inputFile) => {
 
     return mergeRollupConfigs(await rollupBase(inputFile), {
         input: {
+            plugins: [
+                rollupBabel(rollupBabelConfig),
+                rollupAlias(includesAliasConfig),
+            ],
             external: [
                 ...Object.keys(serverGlobals),
                 ...Object.keys(auxGlobals),
