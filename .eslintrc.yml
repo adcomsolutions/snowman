@@ -1,3 +1,4 @@
+parser: babel-eslint
 extends:
   - semistandard
   - plugin:unicorn/recommended
@@ -15,7 +16,5 @@ plugins:
 
 rules:
     prettier/prettier: error
+    unicorn/consistent-function-scoping: off
     unicorn/prevent-abbreviations: off
-    unicorn/filename-case: off
-    no-console: error
-    no-undef: off
