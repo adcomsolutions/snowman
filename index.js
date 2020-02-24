@@ -2,6 +2,7 @@
 import yargs from 'yargs';
 import rollup from 'rollup';
 import rollupIncludesConfig from './config/rollup-includes.js';
+import { postProcessOutput } from './src/build-helper.js';
 
 yargs.array('includes');
 const argv = yargs.argv;
@@ -9,7 +10,8 @@ const argv = yargs.argv;
 const buildBundle = (rollupOptions) => async (inputFile) => {
     const options = await rollupOptions(inputFile);
     const bundle = await rollup.rollup(options.input);
-    return bundle.write(options.output);
+    const bundleOut = await bundle.write(options.output);
+    return postProcessOutput(options.output.file).then(() => bundleOut);
 };
 
 const logOutputPath = async (rollupResultP) =>
