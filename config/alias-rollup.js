@@ -1,7 +1,5 @@
-import { getConfig } from '../src/config-helper.js';
+import config from '../src/config-helper.js';
 import { resolve, join } from 'path';
-
-const config = getConfig();
 
 export const mainAliasConfig = {
     entries: [

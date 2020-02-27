@@ -7,4 +7,4 @@ dotenv.config();
 
 const envConfig = {};
 
-export const getConfig = () => mergeOptions(defaultConfig, envConfig);
+export default mergeOptions(defaultConfig, envConfig);

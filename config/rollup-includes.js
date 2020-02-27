@@ -1,4 +1,4 @@
-import { getConfig } from '../src/config-helper.js';
+import config from '../src/config-helper.js';
 import { serverGlobals } from './snow-globals.js';
 import {
     externalify,
@@ -8,8 +8,6 @@ import {
 } from '../src/rollup-helper.js';
 
 import rollupBase from './rollup-base.js';
-
-const config = getConfig();
 
 const auxGlobals = {
     ClientIncludes: config.clientIncludesImport,

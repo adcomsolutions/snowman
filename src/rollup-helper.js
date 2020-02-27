@@ -1,9 +1,7 @@
-import { getConfig } from './config-helper.js';
+import config from './config-helper.js';
 import { dirName, mergeOptions, squashObjs, extractProp } from './utils.js';
 import path from 'path';
 import glob from 'fast-glob';
-
-const config = getConfig();
 
 export const getLastDir = (dir) => {
     const splitted = dir.split(path.sep);
