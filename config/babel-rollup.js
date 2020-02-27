@@ -12,7 +12,7 @@ export default {
         ['@babel/transform-computed-properties', { loose: true }],
         ['@babel/transform-destructuring', { loose: true }],
         ['@babel/transform-literals'],
-        ['@babel/transform-parameters'],
+        ['@babel/transform-parameters', {loose: true}],
         ['@babel/transform-shorthand-properties'],
         ['@babel/transform-spread', { loose: true }],
         ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
