@@ -15,6 +15,7 @@ export default {
         ['@babel/transform-parameters'],
         ['@babel/transform-shorthand-properties'],
         ['@babel/transform-spread', { loose: true }],
+        ['@babel/plugin-proposal-object-rest-spread', { loose: true }],
         ['@babel/transform-template-literals', { loose: true, spec: true }],
         ['@babel/transform-exponentiation-operator'],
         ['transform-for-of-as-array'],
