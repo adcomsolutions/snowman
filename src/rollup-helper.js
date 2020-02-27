@@ -20,15 +20,22 @@ export const externalify = (libName) => path.resolve(dirName, libName);
 export const getOutputFilePath = (inputFile) =>
     `${path.join(path.dirname(inputFile), baseify(inputFile))}.${config.jsExt}`;
 
-export const globalifyLibs = (libs) => {
+const globalifyBase = (fn) => (libs) => {
     const pieces = libs.map((lib) => ({
         [path.resolve(lib)]: fn(lib),
     }));
     return squashObjs(pieces);
 };
 
+export const globalifySubmodules = globalifyBase(getLastDir);
+
+export const globalifyModules = globalifyBase(baseify);
+
 // Gets list of all "shared" libraries from the shared repo
 // Typically, this list is used to exclude those imports from normal bundles
+export const librarySubmodulesP = glob(
+    `${config.libDir}/${config.libPattern}/*/**.${config.babelExt}`
+);
 export const libraryModulesP = glob(
     `${config.libDir}/${config.libPattern}/*.${config.babelExt}`
 );

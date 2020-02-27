@@ -2,9 +2,13 @@
 import yargs from 'yargs';
 import rollup from 'rollup';
 import rollupIncludesConfig from './config/rollup-includes.js';
+import rollupBackgroundConfig from './config/rollup-background.js';
 import { postProcessOutput } from './src/build-helper.js';
 
 yargs.array('includes');
+yargs.default('includes', []);
+yargs.array('background');
+yargs.default('background', []);
 const argv = yargs.argv;
 
 const buildBundle = (rollupOptions) => async (inputFile) => {
@@ -18,3 +22,4 @@ const logOutputPath = async (rollupResultP) =>
     console.log(`Built file: ${(await rollupResultP).output[0].fileName}`);
 
 argv.includes.map(buildBundle(rollupIncludesConfig)).map(logOutputPath);
+argv.background.map(buildBundle(rollupBackgroundConfig)).map(logOutputPath);
