@@ -6,7 +6,7 @@ export default {
     babelExt: 'mjs',
     jsExt: 'js',
     libDir: '../x_admso_lib/sn/Shared Library/Script Include',
-    libPattern: 'active_*/*',
+    libPattern: 'active_*',
     libActive: 'active_true',
     libName: 'x_admso_lib',
     libAlias: 'lib',

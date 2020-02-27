@@ -22,15 +22,15 @@ export const getOutputFilePath = (inputFile) =>
 
 export const globalifyLibs = (libs) => {
     const pieces = libs.map((lib) => ({
-        [lib]: getLastDir(lib),
+        [path.resolve(lib)]: fn(lib),
     }));
     return squashObjs(pieces);
 };
 
 // Gets list of all "shared" libraries from the shared repo
 // Typically, this list is used to exclude those imports from normal bundles
-export const librariesP = glob(
-    `${config.libDir}/${config.libPattern}/**.${config.babelExt}`
+export const libraryModulesP = glob(
+    `${config.libDir}/${config.libPattern}/*.${config.babelExt}`
 );
 
 // Makes sure files within the same "BundleName" (folder) are bundled in
