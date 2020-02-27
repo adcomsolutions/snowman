@@ -18,8 +18,8 @@ const buildBundle = (rollupOptions) => async (inputFile) => {
     return postProcessOutput(options.output.file).then(() => bundleOut);
 };
 
-const logOutputPath = async (rollupResultP) =>
+const logBuiltFiles = async (rollupResultP) =>
     console.log(`Built file: ${(await rollupResultP).output[0].fileName}`);
 
-argv.includes.map(buildBundle(rollupIncludesConfig)).map(logOutputPath);
-argv.background.map(buildBundle(rollupBackgroundConfig)).map(logOutputPath);
+argv.includes.map(buildBundle(rollupIncludesConfig)).map(logBuiltFiles);
+argv.background.map(buildBundle(rollupBackgroundConfig)).map(logBuiltFiles);
