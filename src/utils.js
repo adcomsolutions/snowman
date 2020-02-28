@@ -1,13 +1,15 @@
 import { fileURLToPath } from 'url';
 import { dirname, resolve } from 'path';
 
-export const testDead = (_) => _ === undefined || _ === null;
+// TODO: Uncomment new version when ECMAScript 2020 is supported in NodeJS
+// export const testNullish = (_) => Boolean(_ ?? false);
+export const testNullish = (_) => _ === null || _ === undefined;
 
 export const mergeOptions = (...objs) => {
     const mergeTwo = (objA, objB) => {
         const baseMerge = { ...objA, ...objB };
         for (const prop in baseMerge) {
-            if (testDead(baseMerge[prop])) baseMerge[prop] = objA[prop];
+            if (testNullish(baseMerge[prop])) baseMerge[prop] = objA[prop];
         }
         return baseMerge;
     };
