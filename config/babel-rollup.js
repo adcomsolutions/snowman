@@ -10,6 +10,8 @@ export default {
         ['@babel/transform-arrow-functions'],
         ['@babel/transform-block-scoped-functions'],
         ['@babel/transform-block-scoping'],
+        ['@babel/proposal-class-properties', { loose: true }],
+        ['@babel/plugin-transform-classes', { loose: true }],
         ['@babel/transform-computed-properties', { loose: true }],
         ['@babel/transform-destructuring', { loose: true, useBuiltIns: true }],
         ['@babel/transform-literals'],
