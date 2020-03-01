@@ -1,12 +1,15 @@
 {
-    "name": "snowman",
-    "version": "0.1.0",
+    "name": "sn-snowman",
+    "version": "0.5.1",
     "type": "module",
     "description": "Compiles ES modules into ServiceNow scripts",
     "husky": {
         "hooks": {
             "pre-commit": "lint-staged --quiet"
         }
+    },
+    "bin": {
+        "snowman": "index.js"
     },
     "lint-staged": {
         "**/*.js": [
@@ -17,7 +20,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "TODO"
+        "url": "https://github.com/adcomsolutions/snowman"
     },
     "homepage": "adcomsolutions.com",
     "scripts": {
