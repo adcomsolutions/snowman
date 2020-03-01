@@ -10,4 +10,6 @@ export default {
     libActive: 'active_true',
     libName: 'x_admso_lib',
     libAlias: 'lib',
+    syncCommand: 'gulp sync --path',
+    syncByDefault: true,
 };

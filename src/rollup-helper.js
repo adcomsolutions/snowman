@@ -13,7 +13,7 @@ export const baseify = (filePath) =>
 export const stripAppName = (baseName) =>
     baseName.replace(/^(x_.+|global)\./, '');
 
-export const externalify = (libName) => path.resolve(dirName, libName);
+export const externalify = (libName) => path.resolve(libName);
 
 export const getOutputFilePath = (inputFile) =>
     `${path.join(path.dirname(inputFile), baseify(inputFile))}.${config.jsExt}`;
