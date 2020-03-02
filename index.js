@@ -10,8 +10,10 @@ import { resolve } from 'path';
 
 yargs.array('includes');
 yargs.default('includes', []);
+yargs.alias('inc', 'includes');
 yargs.array('background');
 yargs.default('background', []);
+yargs.alias('bg', 'background');
 yargs.boolean('sync');
 yargs.default('sync', config.syncByDefault);
 const argv = yargs.argv;
