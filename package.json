@@ -12,8 +12,8 @@
         "snowman": "index.js"
     },
     "lint-staged": {
-        "**/*.js": [
-            "npx eslint --fix --cache"
+        "**/**.js": [
+            "eslint --fix \"**/**.js\""
         ]
     },
     "author": "Chris Crockett",
