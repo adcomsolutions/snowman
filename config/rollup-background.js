@@ -1,6 +1,7 @@
 import { serverGlobals } from './snow-globals.js';
 import {
-    externalify,
+    getBackgroundSubmodulesP,
+    getBackgroundModulesP,
     globalifyModules,
     globalifySubmodules,
     libraryModulesP,
@@ -16,19 +17,25 @@ export default async (inputFile) => {
     // This is so we're calling the logic from Script Includes, not rebundling the same code
     const libSubmodules = await librarySubmodulesP;
     const libModules = await libraryModulesP;
+    const backgroundModules = await getBackgroundModulesP(inputFile);
+    const backgroundSubmodules = await getBackgroundSubmodulesP(inputFile);
 
     return mergeRollupConfigs(await rollupBase(inputFile), {
         input: {
             external: [
                 ...Object.keys(serverGlobals),
-                ...libSubmodules.map(externalify),
-                ...libModules.map(externalify),
+                ...libSubmodules,
+                ...libModules,
+                ...backgroundSubmodules,
+                ...backgroundModules,
             ],
         },
         output: {
             globals: {
                 ...globalifySubmodules(libSubmodules),
                 ...globalifyModules(libModules),
+                ...globalifyModules(backgroundSubmodules),
+                ...globalifyModules(backgroundModules),
                 ...serverGlobals,
             },
         },

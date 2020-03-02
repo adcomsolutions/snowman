@@ -1,5 +1,6 @@
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import { cwd } from 'process';
+import path from 'path';
+import fs from 'fs-extra';
 
 export const uniq = (items) => [...new Set(items)];
 export const invertFn = (fn) => (...args) => !fn(...args);
@@ -31,7 +32,22 @@ export const squashObjs = (objects) =>
 
 export const extractProp = (prop) => (object) => object[prop];
 
-export const dirName = dirname(
-    // TODO: Figure out a smarter way to resolve the index.js dir
-    resolve(fileURLToPath(import.meta.url), '..')
-);
+// Gets the topmost npm project from the current directory
+export const getTopLevelProject = () => {
+    const pieces = cwd().split(path.sep);
+
+    const hasProject = (nextPath) =>
+        fs.existsSync(path.join(nextPath, 'package.json'));
+
+    return pieces.reduce(
+        (lastPath, nextPiece) =>
+            hasProject(lastPath) ? lastPath : path.join(lastPath, nextPiece),
+        path.sep
+    );
+};
+
+export const getLastDir = (pathName, isDir) => {
+    const splitted = pathName.split(path.sep);
+    const depth = isDir ? 1 : 2;
+    return splitted[splitted.length - depth];
+};

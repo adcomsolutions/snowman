@@ -6,6 +6,7 @@ import rollupIncludesConfig from './config/rollup-includes.js';
 import rollupBackgroundConfig from './config/rollup-background.js';
 import { postProcessOutput, syncFile } from './src/build-helper.js';
 import { invertFn, testNullish } from './src/utils.js';
+import { resolve } from 'path';
 
 yargs.array('includes');
 yargs.default('includes', []);
@@ -15,8 +16,9 @@ yargs.boolean('sync');
 yargs.default('sync', config.syncByDefault);
 const argv = yargs.argv;
 
-const includesSrcFiles = argv.includes;
-const backgroundSrcFiles = argv.background;
+const resolveLocalFile = (_) => resolve(process.cwd(), _);
+const includesSrcFiles = argv.includes.map(resolveLocalFile);
+const backgroundSrcFiles = argv.background.map(resolveLocalFile);
 
 const buildBundle = (rollupOptions) => async (inputFile) => {
     const options = await rollupOptions(inputFile);
