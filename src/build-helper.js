@@ -1,8 +1,4 @@
-import config from './config-helper.js';
-import { escapeSpace } from './utils.js';
 import fs from 'fs-extra';
-import execa from 'execa';
-import { resolve } from 'path';
 
 // Scoped apps throw if you try to access __proto__, remap such attempts to the "type" field
 // Rollup wants to clear out the prototype for spec compliance when doing namespace imports (by nulling out __proto__)
@@ -29,12 +25,3 @@ export const postProcessOutput = async (outputFilePath) => {
         fixNsProto(fixBabelInherit(originalContents))
     );
 };
-
-const subsumeExec = async (command) =>
-    execa.command(command, {
-        stdio: 'inherit',
-        encoding: 'utf-8',
-    });
-
-export const syncFile = async (file) =>
-    subsumeExec(`${config.syncCommand} ${escapeSpace(resolve(file))}`);

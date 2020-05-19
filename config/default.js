@@ -14,6 +14,4 @@ export default {
     libPath: 'sn/Shared Library/Script Include/active_true',
     libAlias: 'lib',
     selfAlias: 'me',
-    syncCommand: 'gulp sync --path',
-    syncByDefault: true,
 };

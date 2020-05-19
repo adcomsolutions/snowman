@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-import config from './src/config-helper.js';
 import yargs from 'yargs';
 import rollup from 'rollup';
 import rollupIncludesConfig from './config/rollup-includes.js';
 import rollupBackgroundConfig from './config/rollup-background.js';
-import { postProcessOutput, syncFile } from './src/build-helper.js';
+import { postProcessOutput } from './src/build-helper.js';
 import { invertFn, testNullish } from './src/utils.js';
 import { resolve } from 'path';
 
@@ -14,8 +13,6 @@ yargs.alias('inc', 'includes');
 yargs.array('background');
 yargs.default('background', []);
 yargs.alias('bg', 'background');
-yargs.boolean('sync');
-yargs.default('sync', config.syncByDefault);
 const argv = yargs.argv;
 
 const resolveLocalFile = (_) => resolve(process.cwd(), _);
@@ -30,11 +27,6 @@ const buildBundle = (rollupOptions) => async (inputFile) => {
         bundleOut,
         options,
     ]);
-};
-
-const syncBuiltFile = async (rollupResultP) => {
-    const [, { output: outputOptions }] = await rollupResultP;
-    return syncFile(outputOptions.file);
 };
 
 const logBuiltFile = async (rollupResultP) => {
@@ -52,6 +44,3 @@ const allBuilds = [includesBuildP, backgroundBuildP].filter(
 );
 
 allBuilds.map((buildGroup) => buildGroup.map(logBuiltFile));
-allBuilds.map((buildGroup) =>
-    buildGroup.filter(() => argv.sync).map(syncBuiltFile)
-);
