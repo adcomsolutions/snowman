@@ -16,6 +16,25 @@
             "eslint --fix \"**/**.js\""
         ]
     },
+    "ava": {
+        "environmentVariables": {
+            "SNOWMAN_CLIENT_INCLUDES_IMPORT": "'(global.AbstractAjaxProcessor || AbstractAjaxProcessor)'",
+            "SNOWMAN_SNOW_GLOBALS_FILE": "config/snow-globals.js",
+            "SNOWMAN_JS_EXT": "js",
+            "SNOWMAN_SOURCE_DIR": "mod",
+            "SNOWMAN_OUT_DIR": "src",
+            "SNOWMAN_SCRIPT_INCLUDE_DIR": "Server Development/Script Includes",
+            "SNOWMAN_SCRIPT_INCLUDE_SUBEXT": "script",
+            "SNOWMAN_WORKSPACE_FILE_PATH": "system/sn-workspace.json",
+            "SNOWMAN_LIB_NAME": "Shared Library",
+            "SNOWMAN_LIB_ALIAS": "lib",
+            "SNOWMAN_SELF_ALIAS": "me"
+        },
+        "files": [
+            "test/**/*.test.*"
+        ],
+        "verbose": true
+    },
     "author": "Chris Crockett",
     "license": "MIT",
     "repository": {
@@ -24,7 +43,8 @@
     },
     "homepage": "adcomsolutions.com",
     "scripts": {
-        "lint": "eslint --fix \"**/**.js\""
+        "lint": "eslint --fix \"**/**.js\"",
+        "test": "ava"
     },
     "dependencies": {
         "@babel/core": "^7.8.6",
@@ -67,5 +87,11 @@
         "rollup": "^1.32.0",
         "rollup-plugin-babel": "^4.3.3",
         "yargs": "^15.1.0"
+    },
+    "devDependencies": {
+        "ava": "^3.8.2",
+        "fs-monkey": "^1.0.1",
+        "memfs": "^3.2.0",
+        "sinon": "^9.0.2"
     }
 }
