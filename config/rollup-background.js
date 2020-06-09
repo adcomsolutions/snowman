@@ -1,42 +1,33 @@
 import { serverGlobals } from './snow-globals.js';
 import {
-    getBackgroundSubmodulesP,
-    getBackgroundModulesP,
-    globalifyModules,
-    globalifySubmodules,
-    libraryModulesP,
-    librarySubmodulesP,
+    getScriptIncludeFiles,
+    getLibraryIncludeFiles,
+    mapScriptIncludes,
     mergeRollupConfigs,
+    mapLibraryIncludes,
 } from '../src/rollup-helper.js';
 
 import rollupBase from './rollup-base.js';
 
 export default async (inputFile) => {
-    // All import statements from the shared library are *not* bundled
-    // Calls are instead translated to the scoped name automatically
-    // This is so we're calling the logic from Script Includes, not rebundling the same code
-    const libSubmodules = await librarySubmodulesP;
-    const libModules = await libraryModulesP;
-    const backgroundModules = await getBackgroundModulesP(inputFile);
-    const backgroundSubmodules = await getBackgroundSubmodulesP(inputFile);
+    const includesFilesP = getScriptIncludeFiles(inputFile);
+    const libIncludesFilesP = getLibraryIncludeFiles(inputFile);
+    const includesMapP = includesFilesP.then(mapScriptIncludes);
+    const libIncludesMapP = libIncludesFilesP.then(mapLibraryIncludes);
 
-    return mergeRollupConfigs(await rollupBase(inputFile), {
+    return mergeRollupConfigs(rollupBase(inputFile), {
         input: {
             external: [
                 ...Object.keys(serverGlobals),
-                ...libSubmodules,
-                ...libModules,
-                ...backgroundSubmodules,
-                ...backgroundModules,
+                ...(await libIncludesFilesP),
+                ...(await includesFilesP),
             ],
         },
         output: {
             globals: {
-                ...globalifySubmodules(libSubmodules),
-                ...globalifyModules(libModules),
-                ...globalifyModules(backgroundSubmodules),
-                ...globalifyModules(backgroundModules),
                 ...serverGlobals,
+                ...(await libIncludesMapP),
+                ...(await includesMapP),
             },
         },
     });

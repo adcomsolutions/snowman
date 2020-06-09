@@ -1,26 +1,26 @@
 import config from '../src/config-helper.js';
 import { join } from 'path';
-import { getScriptIncludesDir } from '../src/rollup-helper.js';
+import { getLibraryIncludeDir, getScriptIncludeDir } from '../src/vs-helper.js';
 
 export const mainAliasConfig = (inputFile) => {
-    const includesDir = getScriptIncludesDir(inputFile);
+    const libIncludesDir = getLibraryIncludeDir(inputFile);
+    const includesDir = getScriptIncludeDir(inputFile);
     return {
         entries: [
             {
-                find: new RegExp(
-                    `${config.libAlias}/(.+\\.${config.babelExt})$`
-                ),
+                find: new RegExp(`${config.libAlias}/(.+)`),
                 replacement: join(
-                    config.libDir,
-                    config.libPath,
-                    `${config.libName}.$1`
+                    libIncludesDir,
+                    `$1.${config.scriptSubext}.${config.jsExt}`
                 ),
             },
             {
-                find: new RegExp(
-                    `${config.selfAlias}/(.+\\.(${config.jsExt}|${config.babelExt}))$`
+                find: new RegExp(`${config.selfAlias}/(.+)`),
+                replacement: join(
+                    includesDir,
+                    '$1',
+                    `$1.${config.scriptSubext}.${config.jsExt}`
                 ),
-                replacement: join(includesDir, `${config.projectName}.$1`),
             },
         ],
     };

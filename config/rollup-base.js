@@ -1,4 +1,4 @@
-import { getOutputFilePath } from '../src/rollup-helper.js';
+import { getOutputFilePath } from '../src/vs-helper.js';
 
 import rollupBabel from 'rollup-plugin-babel';
 import rollupBabelConfig from './babel-rollup.js';
@@ -7,7 +7,7 @@ import { mainAliasConfig } from './alias-rollup.js';
 
 const bundleBanner = `// Rollup file built on ${new Date().toGMTString()}`;
 
-export default async (inputFile) => {
+export default (inputFile) => {
     return {
         input: {
             input: inputFile,
