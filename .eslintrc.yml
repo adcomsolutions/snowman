@@ -17,4 +17,5 @@ plugins:
 rules:
     prettier/prettier: error
     unicorn/consistent-function-scoping: off
+    unicorn/explicit-length-check: off
     unicorn/prevent-abbreviations: off
