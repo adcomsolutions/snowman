@@ -1,41 +1,25 @@
-import { getLastDir, getTopLevelProject, mergeOptions } from './utils.js';
+import { env } from 'process';
+import { mergeObjects, objToTuples, tuplesToObj, zip } from './utils.js';
 import defaultConfig from '../config/default.js';
 
-import path from 'path';
-import dotenv from 'dotenv';
+const envifyConfigKey = (configKey) =>
+    'SNOWMAN_' + configKey.replace(/[A-Z]/g, '_$&').toUpperCase();
 
-const resolveLibDir = (config) => ({
-    ...config,
-    libDir: path.isAbsolute(config.libDir)
-        ? config.libDir
-        : path.resolve(getTopLevelProject(), config.libDir),
-});
-
-const resolveProjectDir = (config) => ({
-    ...config,
-    projectDir: config.projectDir || getTopLevelProject(),
-});
-
-const resolveProjectName = (config) => ({
-    ...config,
-    projectName: config.projectName || getLastDir(config.projectDir, true),
-});
-
-const resolveIncludesPattern = (config) => ({
-    ...config,
-    includesPattern: config.includesPattern
-        .replace('$TOPLEVEL', config.fieldFileTopLevel)
-        .replace('$SCRIPTINCLUDE', config.scriptIncludeDirName)
-        .replace('$SCRIPTINCLUDEACTIVE', config.scriptIncludeActiveSubdir),
-});
-
-const processConfig = (config) =>
-    resolveProjectName(
-        resolveProjectDir(resolveLibDir(resolveIncludesPattern(config)))
+const loadEnvConfigForObj = (configObj) => {
+    const configKeys = Object.keys(configObj);
+    const envifiedKeys = configKeys.map(envifyConfigKey);
+    const envToConfigDict = tuplesToObj(zip(envifiedKeys, configKeys));
+    const filteredEnvTuples = objToTuples(env).filter(([key]) =>
+        envifiedKeys.includes(key)
     );
+    return tuplesToObj(
+        filteredEnvTuples.map(([key, value]) => [envToConfigDict[key], value])
+    );
+};
 
-dotenv.config();
+export default mergeObjects(defaultConfig, loadEnvConfigForObj(defaultConfig));
 
-const envConfig = {};
-
-export default processConfig(mergeOptions(defaultConfig, envConfig));
+export const __private__ = {
+    envifyConfigKey,
+    loadEnvConfigForObj,
+};
