@@ -5,7 +5,10 @@ import rollupBabelConfig from './babel-rollup.js';
 import rollupAlias from '@rollup/plugin-alias';
 import { mainAliasConfig } from './alias-rollup.js';
 
-const bundleBanner = `// Rollup file built on ${new Date().toGMTString()}`;
+const bundleBanner = [
+    '/* eslint-disable */',
+    `// Rollup file built on ${new Date().toGMTString()}`,
+].join('\n');
 
 export default (inputFile) => {
     return {
