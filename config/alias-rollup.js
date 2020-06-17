@@ -2,26 +2,14 @@ import config from '../src/config-helper.js';
 import { join } from 'path';
 import { getLibraryIncludeDir, getScriptIncludeDir } from '../src/vs-helper.js';
 
-export const mainAliasConfig = (inputFile) => {
-    const libIncludesDir = getLibraryIncludeDir(inputFile);
-    const includesDir = getScriptIncludeDir(inputFile);
-    return {
-        entries: [
-            {
-                find: new RegExp(`${config.libAlias}/(.+)`),
-                replacement: join(
-                    libIncludesDir,
-                    `$1.${config.scriptSubext}.${config.jsExt}`
-                ),
-            },
-            {
-                find: new RegExp(`${config.selfAlias}/(.+)`),
-                replacement: join(
-                    includesDir,
-                    '$1',
-                    `$1.${config.scriptSubext}.${config.jsExt}`
-                ),
-            },
-        ],
-    };
-};
+const getIncludeAliasConfig = (aliasName, aliasDir) => ({
+    find: new RegExp(`${aliasName}/(.+)`),
+    replacement: join(aliasDir, '$1'),
+});
+
+export const mainAliasConfig = (inputFile) => ({
+    entries: [
+        getIncludeAliasConfig(config.libAlias, getLibraryIncludeDir(inputFile)),
+        getIncludeAliasConfig(config.selfAlias, getScriptIncludeDir(inputFile)),
+    ],
+});

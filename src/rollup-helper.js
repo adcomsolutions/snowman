@@ -21,27 +21,26 @@ const globalifyBase = (fn) => async (libs) => {
 const getModuleNameFromFile = (filePath) =>
     path.basename(filePath, `.${config.scriptSubext}.${config.jsExt}`);
 
-const getScriptIncludeNameFromFile = (filePath) =>
-    path.basename(filePath, `.${config.jsExt}`);
+const getIncludeFilesWith = (pathResolverFn) => async (inputFile) =>
+    glob(
+        path.join(
+            pathResolverFn(inputFile),
+            `*.${config.scriptSubext}.${config.jsExt}`
+        ),
+        { absolute: true }
+    );
 
 // Exported functions
 
-export const mapScriptIncludes = globalifyBase(getScriptIncludeNameFromFile);
+export const mapScriptIncludes = globalifyBase(getModuleNameFromFile);
 
 export const mapLibraryIncludes = globalifyBase(
     async (filePath) =>
         `${await getScopeName(filePath)}.${getModuleNameFromFile(filePath)}`
 );
 
-export const getScriptIncludeFiles = async (inputPath) =>
-    glob(path.join(getScriptIncludeDir(inputPath), `**/*.*.${config.jsExt}`), {
-        absolute: true,
-    });
-
-export const getLibraryIncludeFiles = async (inputPath) =>
-    glob(path.join(getLibraryIncludeDir(inputPath), `*.${config.jsExt}`), {
-        absolute: true,
-    });
+export const getScriptIncludeFiles = getIncludeFilesWith(getScriptIncludeDir);
+export const getLibraryIncludeFiles = getIncludeFilesWith(getLibraryIncludeDir);
 
 export const mergeRollupConfigs = (...rollupConfigs) => ({
     input: mergeObjects(...rollupConfigs.map(extractProp('input'))),
@@ -49,7 +48,7 @@ export const mergeRollupConfigs = (...rollupConfigs) => ({
 });
 
 export const __private__ = {
-    globalifyBase,
+    getIncludeFilesWith,
     getModuleNameFromFile,
-    getScriptIncludeNameFromFile,
+    globalifyBase,
 };

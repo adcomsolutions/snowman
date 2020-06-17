@@ -38,7 +38,7 @@ const refreshHelper = () => {
 test.beforeEach(refreshHelper);
 
 test('Private getLibraryDir works', async (t) => {
-    const libraryDir = `/${workspaceName}/${config.libName}/${config.outDir}`;
+    const libraryDir = `/${workspaceName}/${config.libName}/${config.sourceDir}`;
     const expected = libraryDir;
     const res = vsHelper.priv.getLibraryDir(inputNormalFile);
     t.is(res, expected);
@@ -63,14 +63,15 @@ test('Private getWorkspaceDir works', (t) => {
 });
 
 test('getLibraryIncludeDir works', async (t) => {
-    const librarySrcDir = `/${workspaceName}/${config.libName}/${config.outDir}/${config.scriptIncludeDir}`;
-    const expected = librarySrcDir;
+    const expected = `${vsHelper.priv.getLibraryDir(inputNormalFile)}/${
+        config.scriptIncludeDir
+    }`;
     const res = vsHelper.getLibraryIncludeDir(inputNormalFile);
     t.is(res, expected);
 });
 
 test('getNestedOutputFilePath works', (t) => {
-    const outputFileFragment = `${config.scriptIncludeDir}/my business rule/my business rule.${config.scriptSubext}.${config.jsExt}`;
+    const outputFileFragment = `Server Development/Scheduled Script Executions/${fakeTaskName}/${fakeTaskName}.${normalScriptExt}`;
     const expected = `${vsHelper.priv.getOutDir(
         inputNestedFile
     )}/${outputFileFragment}`;
@@ -79,7 +80,7 @@ test('getNestedOutputFilePath works', (t) => {
 });
 
 test('getOutputFilePath works', (t) => {
-    const outputFileFragment = `${config.scriptIncludeDir}/my business rule.${config.scriptSubext}.${config.jsExt}`;
+    const outputFileFragment = `Server Development/Business Rules/${fakeRuleName}.${normalScriptExt}`;
     const expected = `${vsHelper.priv.getOutDir(
         inputNormalFile
     )}/${outputFileFragment}`;

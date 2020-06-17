@@ -10,7 +10,7 @@ export const VsHelper = (fsLike) => {
     const getWorkspaceDir = fsHelper.getWorkspaceDir(fsLike);
 
     const getLibraryDir = (inputPath) =>
-        path.join(getWorkspaceDir(inputPath), config.libName, config.outDir);
+        path.join(getWorkspaceDir(inputPath), config.libName, config.sourceDir);
 
     const getLibraryIncludeDir = (inputPath) =>
         path.resolve(
@@ -33,7 +33,6 @@ export const VsHelper = (fsLike) => {
         path.join(
             getOutDir(inputFile),
             path.relative(getSourceDir(inputFile), path.dirname(inputFile)),
-            '..',
             path.basename(inputFile)
         );
 
