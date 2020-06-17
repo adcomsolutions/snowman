@@ -10,12 +10,11 @@ export const getMockFs = (
     appName,
     appScope,
     libScope,
-    fakeFilePath
+    fakeFilePaths
 ) => {
     const appPrefix = `${workspaceName}/${appName}`;
 
-    const mockVol = memfs.Volume.fromJSON({
-        [fakeFilePath]: 'console.log("foobar");',
+    const fakeProject = {
         [`/${appPrefix}/${config.outDir}/Server Development/Business Rules/helper`]: {},
         [`/${appPrefix}/${config.sourceDir}/${config.scriptIncludeDir}/helper/helper.${config.scriptSubext}.${config.jsExt}`]: 'const helper = {foo: "bar"};',
         [`/${workspaceName}/${config.libName}/${config.outDir}/${config.scriptIncludeDir}/lib.${config.jsExt}`]: 'var lib = "foobar"',
@@ -33,7 +32,13 @@ export const getMockFs = (
                 },
             },
         }),
+    };
+
+    fakeFilePaths.forEach((fakePath) => {
+        fakeProject[fakePath] = 'console.log("foobar");';
     });
+
+    const mockVol = memfs.Volume.fromJSON(fakeProject);
     const fs = import('fs');
     fsMonkey.patchFs(mockVol, fs);
     return fs;

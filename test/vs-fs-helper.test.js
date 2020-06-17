@@ -19,14 +19,9 @@ const inputFilePath = `/${appPrefix}/subdir1/subdir2/subdir3/file.txt`;
 const sandbox = sinon.createSandbox();
 
 const newMockFs = () =>
-    getMockFs(
-        config,
-        workspaceName,
-        appName,
-        appScope,
-        libScope,
-        inputFilePath
-    );
+    getMockFs(config, workspaceName, appName, appScope, libScope, [
+        inputFilePath,
+    ]);
 
 test.beforeEach(() => {
     sandbox.restore();
