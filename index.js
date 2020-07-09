@@ -8,15 +8,15 @@ import { postProcessOutput } from './src/build-helper.js';
 import { invertFn, testNullish } from './src/utils.js';
 import { resolve } from 'path';
 
-yargs.array('background');
-yargs.default('background', []);
-yargs.alias('bg', 'background');
-yargs.array('background2');
-yargs.default('background2', []);
-yargs.alias('bg2', 'background2');
-yargs.array('includes');
-yargs.default('includes', []);
-yargs.alias('inc', 'includes');
+const addInputType = (name, shortName) => {
+    yargs.array(name);
+    yargs.default(name, []);
+    yargs.alias(shortName, name);
+};
+
+addInputType('background', 'bg');
+addInputType('background2', 'bg2');
+addInputType('includes', 'inc');
 const argv = yargs.argv;
 
 const resolveLocalFile = (_) => resolve(process.cwd(), _);
@@ -43,18 +43,12 @@ const logBuiltFile = async (rollupResultP) => {
     console.log(output[0].fileName);
 };
 
-const backgroundBuildP = backgroundSrcFiles.map(
-    buildBundle(rollupBackgroundConfig)
-);
+const buildPList = [
+    backgroundSrcFiles.map(buildBundle(rollupBackgroundConfig)),
+    background2SrcFiles.map(buildBundle(rollupBackground2Config)),
+    includesSrcFiles.map(buildBundle(rollupIncludesConfig)),
+];
 
-const background2BuildP = background2SrcFiles.map(
-    buildBundle(rollupBackground2Config)
-);
-
-const includesBuildP = includesSrcFiles.map(buildBundle(rollupIncludesConfig));
-
-const allBuilds = [includesBuildP, backgroundBuildP, background2BuildP].filter(
-    invertFn(testNullish)
-);
-
-allBuilds.map((buildGroup) => buildGroup.map(logBuiltFile));
+buildPList
+    .filter(invertFn(testNullish))
+    .map((buildGroup) => buildGroup.map(logBuiltFile));
