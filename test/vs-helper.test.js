@@ -13,12 +13,10 @@ const libScope = 'x_lib_name';
 const appPrefix = `${workspaceName}/${appName}`;
 const sourceDir = `${appPrefix}/${config.sourceDir}`;
 const normalScriptExt = `${config.scriptSubext}.${config.jsExt}`;
-const fakeTaskName = 'Fake Task';
 const fakeIncludeName = 'fake business rule';
 const fakeRuleName = 'Fake Rule';
 
 const inputLibraryFile = `/${sourceDir}/${config.scriptIncludeDir}/${fakeIncludeName}.${normalScriptExt}`;
-const inputNestedFile = `/${sourceDir}/Server Development/Scheduled Script Executions/${fakeTaskName}/${fakeTaskName}.${normalScriptExt}`;
 const inputNormalFile = `/${sourceDir}/Server Development/Business Rules/${fakeRuleName}.${normalScriptExt}`;
 
 let vsHelper;
@@ -29,7 +27,7 @@ const refreshHelper = () => {
         appName,
         appScope,
         libScope,
-        [inputLibraryFile, inputNestedFile, inputNormalFile]
+        [inputLibraryFile, inputNormalFile]
     );
     vsHelper = VsHelper(mockFs);
     vsHelper.priv = vsHelper.__private__;
@@ -67,15 +65,6 @@ test('getLibraryIncludeDir works', async (t) => {
         config.scriptIncludeDir
     }`;
     const res = vsHelper.getLibraryIncludeDir(inputNormalFile);
-    t.is(res, expected);
-});
-
-test('getNestedOutputFilePath works', (t) => {
-    const outputFileFragment = `Server Development/Scheduled Script Executions/${fakeTaskName}/${fakeTaskName}.${normalScriptExt}`;
-    const expected = `${vsHelper.priv.getOutDir(
-        inputNestedFile
-    )}/${outputFileFragment}`;
-    const res = vsHelper.getNestedOutputFilePath(inputNestedFile);
     t.is(res, expected);
 });
 

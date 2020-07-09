@@ -17,15 +17,6 @@ export const VsHelper = (fsLike) => {
             path.join(getLibraryDir(inputPath), config.scriptIncludeDir)
         );
 
-    // Some background scripts are nested within an extra dir layer based on the record name
-    // This output path resolver is used for the --bg2/--background2 args
-    const getNestedOutputFilePath = (inputFile) =>
-        path.join(
-            getOutDir(inputFile),
-            path.relative(getSourceDir(inputFile), path.dirname(inputFile)),
-            path.basename(inputFile)
-        );
-
     const getOutDir = (inputPath) =>
         path.join(getAppDir(inputPath), config.outDir);
 
@@ -53,7 +44,6 @@ export const VsHelper = (fsLike) => {
 
     return {
         getLibraryIncludeDir,
-        getNestedOutputFilePath,
         getOutputFilePath,
         getScopeName,
         getScriptIncludeDir,
@@ -65,7 +55,6 @@ const vsHelper = VsHelper(fs);
 export default vsHelper;
 export const getLibraryIncludeDir = vsHelper.getLibraryIncludeDir;
 export const getOutputFilePath = vsHelper.getOutputFilePath;
-export const getNestedOutputFilePath = vsHelper.getNestedOutputFilePath;
 export const getScopeName = vsHelper.getScopeName;
 export const getScriptIncludeDir = vsHelper.getScriptIncludeDir;
 export const getSrcDir = vsHelper.getSrcDir;

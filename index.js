@@ -2,7 +2,6 @@
 import yargs from 'yargs';
 import rollup from 'rollup';
 import rollupBackgroundConfig from './config/rollup-background.js';
-import rollupBackground2Config from './config/rollup-background2.js';
 import rollupIncludesConfig from './config/rollup-includes.js';
 import { postProcessOutput } from './src/build-helper.js';
 import { invertFn, testNullish } from './src/utils.js';
@@ -15,16 +14,12 @@ const addInputType = (name, shortName) => {
 };
 
 addInputType('background', 'bg');
-addInputType('background2', 'bg2');
 addInputType('includes', 'inc');
 const argv = yargs.argv;
 
 const resolveLocalFile = (_) => resolve(process.cwd(), _);
 // For Regular background scripts that run in an IIFE
 const backgroundSrcFiles = argv.background.map(resolveLocalFile);
-// Same as backgroundSrcFiles, but for the weird record types that use a nested path (not sure why vscode does this...)
-// example: Scheduled Script Executions/My Script/My Script.script.js
-const background2SrcFiles = argv.background2.map(resolveLocalFile);
 // Script Includes that must add their own variable to scope
 const includesSrcFiles = argv.includes.map(resolveLocalFile);
 
@@ -45,7 +40,6 @@ const logBuiltFile = async (rollupResultP) => {
 
 const buildPList = [
     backgroundSrcFiles.map(buildBundle(rollupBackgroundConfig)),
-    background2SrcFiles.map(buildBundle(rollupBackground2Config)),
     includesSrcFiles.map(buildBundle(rollupIncludesConfig)),
 ];
 
