@@ -32,7 +32,7 @@ export const VsHelper = (fsLike) => {
             path.basename(inputFile)
         );
 
-    const getLibraryOutputFileName = (inputFile) => {
+    const getLibraryOutputFileName = (basename) => (inputFile) => {
         const rawPath = path.relative(
             getScriptIncludeDir(inputFile),
             path.dirname(inputFile)
@@ -42,15 +42,19 @@ export const VsHelper = (fsLike) => {
         return rawPath
             .split(path.sep)
             .filter((_) => _ !== '')
-            .concat(path.basename(inputFile))
+            .concat(path.basename(inputFile, basename))
             .join('_');
     };
+
+    const getLibraryOutputBaseName = getLibraryOutputFileName(
+        `.${config.scriptSubext}.${config.jsExt}`
+    );
 
     const getLibraryOutputFilePath = (inputFile) =>
         path.join(
             getOutDir(inputFile),
             config.scriptIncludeDir,
-            getLibraryOutputFileName(inputFile)
+            getLibraryOutputFileName()(inputFile)
         );
 
     const getScriptIncludeDir = (inputPath) =>
@@ -65,6 +69,7 @@ export const VsHelper = (fsLike) => {
 
     const __private__ = {
         getIncludeFilesWith,
+        getLibraryOutputFileName,
         getOutDir,
         getSourceDir,
         getWorkspaceDir,
@@ -73,7 +78,7 @@ export const VsHelper = (fsLike) => {
     return {
         getLibraryDir,
         getLibraryIncludeFiles,
-        getLibraryOutputFileName,
+        getLibraryOutputBaseName,
         getLibraryOutputFilePath,
         getOutputFilePath,
         getScopeName,
@@ -87,7 +92,7 @@ const vsHelper = VsHelper(fs);
 export default vsHelper;
 export const getLibraryDir = vsHelper.getLibraryDir;
 export const getLibraryIncludeFiles = vsHelper.getLibraryIncludeFiles;
-export const getLibraryOutputFileName = vsHelper.getLibraryOutputFileName;
+export const getLibraryOutputBaseName = vsHelper.getLibraryOutputBaseName;
 export const getLibraryOutputFilePath = vsHelper.getLibraryOutputFilePath;
 export const getOutputFilePath = vsHelper.getOutputFilePath;
 export const getScopeName = vsHelper.getScopeName;

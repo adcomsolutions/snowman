@@ -51,6 +51,12 @@ test('Private getIncludeFilesWith works', async (t) => {
     );
 });
 
+test('Private getLibraryOutputFileName works', (t) => {
+    const expected = `deeply_nested_path_MyScriptInclude.${normalScriptExt}`;
+    const res = vsHelper.priv.getLibraryOutputFileName()(inputLibraryFile);
+    t.is(res, expected);
+});
+
 test('Private getOutDir works', (t) => {
     const expected = `/${workspaceName}/${appName}/${config.outDir}`;
     const res = vsHelper.priv.getOutDir(inputNormalFile);
@@ -85,16 +91,10 @@ test('getOutputFilePath works', (t) => {
     t.is(res, expected);
 });
 
-test('getLibraryOutputFileName works', (t) => {
-    const expected = `deeply_nested_path_MyScriptInclude.${normalScriptExt}`;
-    const res = vsHelper.getLibraryOutputFileName(inputLibraryFile);
-    t.is(res, expected);
-});
-
 test('getLibraryOutputFilePath works', (t) => {
     const expected = `${vsHelper.priv.getOutDir(inputLibraryFile)}/${
         config.scriptIncludeDir
-    }/${vsHelper.getLibraryOutputFileName(inputLibraryFile)}`;
+    }/${vsHelper.priv.getLibraryOutputFileName()(inputLibraryFile)}`;
     const res = vsHelper.getLibraryOutputFilePath(inputLibraryFile);
     t.is(res, expected);
 });

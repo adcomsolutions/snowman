@@ -1,5 +1,5 @@
 import { mergeObjects, squashObjs, extractProp } from './utils.js';
-import { getScopeName, getLibraryOutputFileName } from './vs-helper.js';
+import { getScopeName, getLibraryOutputBaseName } from './vs-helper.js';
 
 // Private functions, export these to __private__ at end of module
 const globalifyBase = (fn) => async (libs) => {
@@ -13,11 +13,11 @@ const globalifyBase = (fn) => async (libs) => {
 
 // Exported functions
 
-export const mapScriptIncludes = globalifyBase(getLibraryOutputFileName);
+export const mapScriptIncludes = globalifyBase(getLibraryOutputBaseName);
 
 export const mapLibraryIncludes = globalifyBase(
     async (filePath) =>
-        `${await getScopeName(filePath)}.${getLibraryOutputFileName(filePath)}`
+        `${await getScopeName(filePath)}.${getLibraryOutputBaseName(filePath)}`
 );
 
 export const mergeRollupConfigs = (...rollupConfigs) => ({

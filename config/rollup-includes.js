@@ -1,17 +1,17 @@
-import { basename } from 'path';
-import config from '../src/config-helper.js';
 import { mergeRollupConfigs } from '../src/rollup-helper.js';
+import {
+    getLibraryOutputBaseName,
+    getLibraryOutputFilePath,
+} from '../src/vs-helper.js';
 
 import rollupBackground from './rollup-background.js';
 
 export default async (inputFile) => {
-    const outputName = basename(
-        inputFile,
-        `.${config.scriptSubext}.${config.jsExt}`
-    );
+    const outputName = getLibraryOutputBaseName(inputFile);
 
     return mergeRollupConfigs(await rollupBackground(inputFile), {
         output: {
+            file: getLibraryOutputFilePath(inputFile),
             name: outputName,
             exports: 'default',
         },
