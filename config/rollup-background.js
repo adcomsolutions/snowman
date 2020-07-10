@@ -1,11 +1,13 @@
 import { serverGlobals } from './snow-globals.js';
 import {
+    mapScriptIncludes,
+    mapLibraryIncludes,
+    mergeRollupConfigs,
+} from '../src/rollup-helper.js';
+import {
     getScriptIncludeFiles,
     getLibraryIncludeFiles,
-    mapScriptIncludes,
-    mergeRollupConfigs,
-    mapLibraryIncludes,
-} from '../src/rollup-helper.js';
+} from '../src/vs-helper.js';
 
 import rollupBase from './rollup-base.js';
 

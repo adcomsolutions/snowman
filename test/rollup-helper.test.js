@@ -1,28 +1,14 @@
 import test from 'ava';
 import sinon from 'sinon';
 
-import config from '../config/default.js';
 import { passthroughFn } from '../src/utils.js';
 import {
-    mapScriptIncludes,
     mergeRollupConfigs,
     __private__ as priv,
 } from '../src/rollup-helper.js';
 
-const workspaceName = 'workspaceName';
-const appName = 'appName';
-const aModulesDir = `${workspaceName}/${appName}/${config.srcDir}/${config.scriptIncludeDir}`;
-const includesDir = `${workspaceName}/${config.libName}/${config.outDir}/${config.scriptIncludeDir}`;
-
 test.beforeEach((t) => {
     t.context.sandbox = sinon.createSandbox();
-});
-
-test('Private getModuleNameFromFile works', (t) => {
-    const fakeFilePath = `${aModulesDir}/myModule/myModule.${config.scriptSubext}.${config.jsExt}`;
-    const expected = 'myModule';
-    const res = priv.getModuleNameFromFile(fakeFilePath);
-    t.is(res, expected);
 });
 
 test('Private globalifyBase works', async (t) => {
@@ -33,34 +19,6 @@ test('Private globalifyBase works', async (t) => {
         [input[1]]: input[1],
     };
     const res = await testableGlobalifyBaseP(input);
-    t.deepEqual(res, expected);
-});
-
-test('Private getIncludeFilesWith works', async (t) => {
-    const spy = t.context.sandbox.spy(passthroughFn);
-    const inputFile = '/fakepath/fakefile.js';
-    const testableFn = priv.getIncludeFilesWith(spy);
-    await testableFn(inputFile);
-    t.assert(
-        spy.calledOnceWith(inputFile),
-        'Resolver function should be called once'
-    );
-});
-
-test('mapScriptIncludes works', async (t) => {
-    const fakeScriptIncludes = [
-        `${includesDir}/include_a.${config.scriptSubext}.${config.jsExt}`,
-        `${includesDir}/include_b.${config.scriptSubext}.${config.jsExt}`,
-        `${includesDir}/include_c.${config.scriptSubext}.${config.jsExt}`,
-    ];
-
-    const expected = {
-        [fakeScriptIncludes[0]]: 'include_a',
-        [fakeScriptIncludes[1]]: 'include_b',
-        [fakeScriptIncludes[2]]: 'include_c',
-    };
-
-    const res = await mapScriptIncludes(fakeScriptIncludes);
     t.deepEqual(res, expected);
 });
 

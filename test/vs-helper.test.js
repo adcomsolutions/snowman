@@ -1,9 +1,11 @@
 import test from 'ava';
+import sinon from 'sinon';
 
 import { getMockFs } from './helper.js';
 
 import config from '../config/default.js';
 import { VsHelper } from '../src/vs-helper.js';
+import { passthroughFn } from '../src/utils.js';
 
 const workspaceName = 'workspaceName';
 const appName = 'appName';
@@ -13,10 +15,10 @@ const libScope = 'x_lib_name';
 const appPrefix = `${workspaceName}/${appName}`;
 const sourceDir = `${appPrefix}/${config.sourceDir}`;
 const normalScriptExt = `${config.scriptSubext}.${config.jsExt}`;
-const fakeIncludeName = 'fake business rule';
+const fakeIncludePath = 'deeply/nested/path/MyScriptInclude';
 const fakeRuleName = 'Fake Rule';
 
-const inputLibraryFile = `/${sourceDir}/${config.scriptIncludeDir}/${fakeIncludeName}.${normalScriptExt}`;
+const inputLibraryFile = `/${sourceDir}/${config.scriptIncludeDir}/${fakeIncludePath}.${normalScriptExt}`;
 const inputNormalFile = `/${sourceDir}/Server Development/Business Rules/${fakeRuleName}.${normalScriptExt}`;
 
 let vsHelper;
@@ -34,12 +36,19 @@ const refreshHelper = () => {
 };
 
 test.beforeEach(refreshHelper);
+test.beforeEach((t) => {
+    t.context.sandbox = sinon.createSandbox();
+});
 
-test('Private getLibraryDir works', async (t) => {
-    const libraryDir = `/${workspaceName}/${config.libName}/${config.sourceDir}`;
-    const expected = libraryDir;
-    const res = vsHelper.priv.getLibraryDir(inputNormalFile);
-    t.is(res, expected);
+test('Private getIncludeFilesWith works', async (t) => {
+    const spy = t.context.sandbox.spy(passthroughFn);
+    const inputFile = '/fakepath/fakefile.js';
+    const testableFn = vsHelper.priv.getIncludeFilesWith(spy);
+    await testableFn(inputFile);
+    t.assert(
+        spy.calledOnceWith(inputFile),
+        'Resolver function should be called once'
+    );
 });
 
 test('Private getOutDir works', (t) => {
@@ -60,11 +69,10 @@ test('Private getWorkspaceDir works', (t) => {
     t.is(res, expected);
 });
 
-test('getLibraryIncludeDir works', async (t) => {
-    const expected = `${vsHelper.priv.getLibraryDir(inputNormalFile)}/${
-        config.scriptIncludeDir
-    }`;
-    const res = vsHelper.getLibraryIncludeDir(inputNormalFile);
+test('getLibraryDir works', async (t) => {
+    const libraryDir = `/${workspaceName}/${config.libName}/${config.sourceDir}`;
+    const expected = `${libraryDir}/${config.scriptIncludeDir}`;
+    const res = vsHelper.getLibraryDir(inputNormalFile);
     t.is(res, expected);
 });
 
@@ -74,6 +82,20 @@ test('getOutputFilePath works', (t) => {
         inputNormalFile
     )}/${outputFileFragment}`;
     const res = vsHelper.getOutputFilePath(inputNormalFile);
+    t.is(res, expected);
+});
+
+test('getLibraryOutputFileName works', (t) => {
+    const expected = `deeply_nested_path_MyScriptInclude.${normalScriptExt}`;
+    const res = vsHelper.getLibraryOutputFileName(inputLibraryFile);
+    t.is(res, expected);
+});
+
+test('getLibraryOutputFilePath works', (t) => {
+    const expected = `${vsHelper.priv.getOutDir(inputLibraryFile)}/${
+        config.scriptIncludeDir
+    }/${vsHelper.getLibraryOutputFileName(inputLibraryFile)}`;
+    const res = vsHelper.getLibraryOutputFilePath(inputLibraryFile);
     t.is(res, expected);
 });
 

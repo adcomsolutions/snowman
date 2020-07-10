@@ -3,6 +3,7 @@
 import config from './config-helper.js';
 import { getLastDirFromDir } from './utils.js';
 import { promisify } from 'util';
+import glob from 'fast-glob';
 import path from 'path';
 
 // Private functions, exported at end of file as __private__
@@ -43,6 +44,21 @@ export const getScopeName = (fs) => async (inputPath) => {
     const scopeData = JSON.parse(await rawData);
     return scopeData.ALL_APPLICATIONS[appName].sys_scope;
 };
+
+export const getIncludeFilesWith = (fs) => (pathResolverFn) => async (
+    inputFile
+) =>
+    glob(
+        path.join(
+            glob.escapePath(pathResolverFn(inputFile)),
+            '**',
+            `*.${config.scriptSubext}.${config.jsExt}`
+        ),
+        {
+            absolute: true,
+            fs,
+        }
+    );
 
 // Export private functions for testing
 export const __private__ = {
