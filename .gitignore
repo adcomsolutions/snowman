@@ -1,6 +1,7 @@
 *.log
 node_modules/
 artifacts/
+coverage/
 .eslintcache
 .now-sync-auth.yml
 .roadrunner.json
