@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import yargs from 'yargs';
-import rollup from 'rollup';
+import { rollup } from 'rollup';
 import rollupBackgroundConfig from './config/rollup-background.js';
 import rollupIncludesConfig from './config/rollup-includes.js';
 import { postProcessOutput } from './src/build-helper.js';
@@ -25,7 +25,7 @@ const includesSrcFiles = argv.includes.map(resolveLocalFile);
 
 const buildBundle = (rollupOptions) => async (inputFile) => {
     const options = await rollupOptions(inputFile);
-    const bundle = await rollup.rollup(options.input);
+    const bundle = await rollup(options.input);
     const bundleOut = await bundle.write(options.output);
     return postProcessOutput(options.output.file).then(() => [
         bundleOut,
