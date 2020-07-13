@@ -18,4 +18,8 @@ rules:
     prettier/prettier: error
     unicorn/consistent-function-scoping: off
     unicorn/explicit-length-check: off
+    unicorn/no-abusive-eslint-disable: off
+    unicorn/no-fn-reference-in-iterator: off
+    unicorn/no-reduce: off
+    unicorn/no-null: off
     unicorn/prevent-abbreviations: off
