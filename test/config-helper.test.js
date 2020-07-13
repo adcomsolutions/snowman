@@ -24,6 +24,6 @@ test.serial('loadEnvConfigForObj works', (t) => {
         const res = me.loadEnvConfigForObj({ jsExt: 'js', sourceDir: 'mod' });
         t.deepEqual(res, expected);
     });
-    t.is(env.SNOWMAN_JS_EXT, undefined);
+    t.is(env.SNOWMAN_JS_EXT);
     t.not(env.SNOWMAN_SOURCE_DIR, 'bar');
 });

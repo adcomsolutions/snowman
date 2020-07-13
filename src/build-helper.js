@@ -14,7 +14,7 @@ const fixNsProto = (fileContents) =>
 // HACK: Maybe I should fork plugin-transform-classes with this change so it's less brittle?
 const fixBabelInherit = (fileContents) =>
     fileContents.replace(
-        /function _inheritsLoose\(subClass, superClass\) \{[\s\S]+?\}/,
+        /function _inheritsLoose\(subClass, superClass\) {[\S\s]+?}/,
         `function _inheritsLoose(subClass, superClass) { subClass = Object.extend(subClass, superClass); subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.initialize = subClass }`
     );
 
