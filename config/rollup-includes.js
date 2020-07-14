@@ -13,7 +13,6 @@ export default async (inputFile) => {
         output: {
             file: getLibraryOutputFilePath(inputFile),
             name: outputName,
-            exports: 'default',
         },
     });
 };
