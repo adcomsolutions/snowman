@@ -3,7 +3,9 @@ import { join } from 'path';
 import { getLibraryDir, getScriptIncludeDir } from '../src/vs-helper.js';
 
 const getIncludeAliasConfig = (aliasName, aliasDir) => ({
-    find: new RegExp(`${aliasName}/(.+)`),
+    find: new RegExp(
+        `${aliasName}\\/(.+?)(\\.${config.scriptSubext})?(\\.${config.jsExt})?$`
+    ),
     replacement: join(aliasDir, `$1.${config.scriptSubext}.${config.jsExt}`),
 });
 
