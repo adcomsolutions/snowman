@@ -7,21 +7,7 @@ import { readFile, writeFile } from 'fs/promises';
 const fixNsProto = (fileContents) =>
     fileContents.replace(/__proto__: null/g, 'type: null');
 
-// Yet more workarounds for __proto__
-// Babel wants to use __proto__ for class inheritence, which obviously doesn't fly
-// We replace the functionality with a sham based on the SNOW Object.extend function
-// The extendObject function is avoided, because the original prototype would be discarded
-// HACK: Maybe I should fork plugin-transform-classes with this change so it's less brittle?
-const fixBabelInherit = (fileContents) =>
-    fileContents.replace(
-        /function _inheritsLoose\(subClass, superClass\) {[\S\s]+?}/,
-        `function _inheritsLoose(subClass, superClass) { subClass = Object.extend(subClass, superClass); subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; subClass.initialize = subClass }`
-    );
-
 export const postProcessOutput = async (outputFilePath) => {
     const originalContents = await readFile(outputFilePath, 'utf8');
-    return writeFile(
-        outputFilePath,
-        fixNsProto(fixBabelInherit(originalContents))
-    );
+    return writeFile(outputFilePath, fixNsProto(originalContents));
 };

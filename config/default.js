@@ -2,6 +2,7 @@ export default {
     clientIncludesImport:
         '(global.AbstractAjaxProcessor || AbstractAjaxProcessor)',
     snowGlobalsFile: 'config/snow-globals.js',
+    babelHelperName: 'x_admso_lib2.babelHelpers',
     jsExt: 'js',
     sourceDir: 'mod',
     outDir: 'src',

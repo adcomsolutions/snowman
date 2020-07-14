@@ -89,6 +89,7 @@
         "yargs": "^15.4.1"
     },
     "devDependencies": {
+        "@babel/plugin-external-helpers": "^7.10.4",
         "ava": "^3.10.1",
         "c8": "^7.2.1",
         "fs-monkey": "^1.0.1",

@@ -8,7 +8,9 @@ const require = createRequire(import.meta.url);
 export default {
     exclude: 'node_modules/**',
     babelrc: false,
+    babelHelpers: 'external',
     plugins: [
+        ['@babel/plugin-external-helpers'],
         ['@babel/plugin-transform-for-of', { loose: true }],
         ['@babel/plugin-proposal-nullish-coalescing-operator', { loose: true }],
         ['@babel/plugin-proposal-optional-catch-binding'],
