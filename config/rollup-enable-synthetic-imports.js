@@ -1,14 +1,17 @@
 export default {
+    // Resolve imports normally, but inject syntheticNamedExports into the options if not external
     resolveId(id, importer) {
-        // Ignore top level module
-        if (importer === undefined) return null;
-        // Resolve imports normally, but inject syntheticNamedExports into the options
-        return this.resolve(id, importer, { skipSelf: true }).then(
-            (resolved) => {
-                const result = resolved || { id: id };
-                result.syntheticNamedExports = true;
-                return result;
+        const normalResolutionP = this.resolve(id, importer, {
+            skipSelf: true,
+        });
+
+        return normalResolutionP.then((normalResolution) => {
+            const result = normalResolution || { id: id };
+            if (result.external) {
+                return null;
             }
-        );
+            result.syntheticNamedExports = true;
+            return result;
+        });
     },
 };
