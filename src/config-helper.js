@@ -1,5 +1,6 @@
 import { env } from 'process';
 import { mergeObjects, objToTuples, tuplesToObj, zip } from './utils.js';
+import { getConfigYargs } from './yargs-helper.js';
 import defaultConfig from '../config/default.js';
 
 const envifyConfigKey = (configKey) =>
@@ -17,7 +18,11 @@ const loadEnvConfigForObj = (configObj) => {
     );
 };
 
-export default mergeObjects(defaultConfig, loadEnvConfigForObj(defaultConfig));
+export default mergeObjects(
+    defaultConfig,
+    loadEnvConfigForObj(defaultConfig),
+    getConfigYargs()
+);
 
 export const __private__ = {
     envifyConfigKey,

@@ -12,4 +12,6 @@ export default {
     libName: 'Shared Library',
     libAlias: 'lib',
     selfAlias: 'me',
+    verbose: false,
+    debug: false,
 };

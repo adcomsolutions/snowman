@@ -1,47 +1,28 @@
 #!/usr/bin/env node
-import yargs from 'yargs';
 import { resolve } from 'path';
-
 import { rollup } from 'rollup';
+
+import config from './src/config-helper.js';
 import rollupBackgroundConfig from './config/rollup-background.js';
 import rollupIncludesConfig from './config/rollup-includes.js';
+import { getFileYargs } from './src/yargs-helper.js';
 import { postProcessOutput } from './src/build-helper.js';
 import { invertFn, testNullish } from './src/utils.js';
 
-import { asyncSequential } from './src/debug.js';
-
-const addInputType = (name, shortName) => {
-    yargs.array(name);
-    yargs.default(name, []);
-    yargs.alias(shortName, name);
-};
-
-// Set up verbose logging flag
-yargs.boolean('verbose');
-yargs.default('verbose', false);
-yargs.alias('v', 'verbose');
-// Set up debugging flag
-yargs.boolean('debug');
-yargs.default('debug', false);
-
-// Set up input parameters
-addInputType('background', 'bg');
-addInputType('includes', 'inc');
-const argv = yargs.argv;
-
-const verboseLog = (...args) => {
-    if (argv.verbose) console.debug(...args);
-};
+import { asyncSequential, debugLog, verboseLog } from './src/debug-helper.js';
 
 const resolveLocalFile = (_) => resolve(process.cwd(), _);
+
+const buildFiles = getFileYargs();
 // For Regular background scripts that run in an IIFE
-const backgroundSrcFiles = argv.background.map(resolveLocalFile);
+const backgroundSrcFiles = buildFiles.background.map(resolveLocalFile);
 // Script Includes that must add their own variable to scope
-const includesSrcFiles = argv.includes.map(resolveLocalFile);
+const includesSrcFiles = buildFiles.includes.map(resolveLocalFile);
 
 const buildBundle = (rollupOptions) => async (inputFile) => {
     verboseLog(`Processing configuration: ${inputFile}`);
     const options = await rollupOptions(inputFile);
+    debugLog('Build options used:', options);
     verboseLog(`Compiling script: ${inputFile}`);
     const bundle = await rollup(options.input).catch(console.error);
     if (bundle === undefined) return null;
@@ -63,7 +44,9 @@ const logBuiltFile = async (rollupResultP) => {
     console.log(`Built file: ${output[0].fileName}`);
 };
 
-const buildBundleFn = argv.debug ? buildBundleSync : buildBundle;
+verboseLog('Snowman Config Data:', config);
+
+const buildBundleFn = config.debug ? buildBundleSync : buildBundle;
 
 const buildPList = [
     backgroundSrcFiles.map(buildBundleFn(rollupBackgroundConfig)),
