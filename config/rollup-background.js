@@ -5,6 +5,7 @@ import {
     mergeRollupConfigs,
 } from '../src/rollup-helper.js';
 import {
+    getScopeName,
     getScriptIncludeFiles,
     getLibraryIncludeFiles,
 } from '../src/vs-helper.js';
@@ -19,6 +20,7 @@ export default async (inputFile) => {
 
     return mergeRollupConfigs(rollupBase(inputFile), {
         input: {
+            context: await getScopeName(inputFile),
             external: [
                 ...Object.keys(serverGlobals),
                 ...(await libIncludesFilesP),
