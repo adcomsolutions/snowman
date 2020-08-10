@@ -8,8 +8,11 @@ const isFakeNamedExport = (astNode) =>
     astNode.type === 'ExportNamedDeclaration' && astNode.declaration === null;
 
 export default {
-    transform(code, id) {
+    async transform(code, id) {
         if (id.startsWith('\0')) return;
+        const resolveData = await this.resolve(id);
+        if (!resolveData.external) return;
+
         const ast = this.parse(code);
         const myCode = code.split('');
         const myExports = [];
