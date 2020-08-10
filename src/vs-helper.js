@@ -8,7 +8,7 @@ export const VsHelper = (fsLike) => {
     const getAppDir = fsHelper.getAppDir(fsLike);
     const getScopeName = fsHelper.getScopeName(fsLike);
     const getWorkspaceDir = fsHelper.getWorkspaceDir(fsLike);
-    const getIncludeFilesWith = fsHelper.getIncludeFilesWith(fsLike);
+    const getAllIncludeFiles = fsHelper.getAllIncludeFiles(fsLike);
 
     const getLibraryDir = (inputPath) =>
         path.resolve(
@@ -19,8 +19,6 @@ export const VsHelper = (fsLike) => {
                 config.scriptIncludeDir
             )
         );
-
-    const getLibraryIncludeFiles = getIncludeFilesWith(getLibraryDir);
 
     const getOutDir = (inputPath) =>
         path.join(getAppDir(inputPath), config.outDir);
@@ -62,41 +60,36 @@ export const VsHelper = (fsLike) => {
             path.join(getSourceDir(inputPath), config.scriptIncludeDir)
         );
 
-    const getScriptIncludeFiles = getIncludeFilesWith(getScriptIncludeDir);
-
     const getSourceDir = (inputPath) =>
         path.join(getAppDir(inputPath), config.sourceDir);
 
     const __private__ = {
-        getIncludeFilesWith,
         getLibraryOutputFileName,
         getOutDir,
         getSourceDir,
-        getWorkspaceDir,
     };
 
     return {
+        getAllIncludeFiles,
         getLibraryDir,
-        getLibraryIncludeFiles,
         getLibraryOutputBaseName,
         getLibraryOutputFilePath,
         getOutputFilePath,
+        getWorkspaceDir,
         getScopeName,
         getScriptIncludeDir,
-        getScriptIncludeFiles,
         __private__,
     };
 };
 
 const vsHelper = VsHelper(fs);
 export default vsHelper;
+export const getAllIncludeFiles = vsHelper.getAllIncludeFiles;
 export const getLibraryDir = vsHelper.getLibraryDir;
-export const getLibraryIncludeFiles = vsHelper.getLibraryIncludeFiles;
 export const getLibraryOutputBaseName = vsHelper.getLibraryOutputBaseName;
 export const getLibraryOutputFilePath = vsHelper.getLibraryOutputFilePath;
 export const getOutputFilePath = vsHelper.getOutputFilePath;
 export const getScopeName = vsHelper.getScopeName;
 export const getScriptIncludeDir = vsHelper.getScriptIncludeDir;
-export const getScriptIncludeFiles = vsHelper.getScriptIncludeFiles;
 export const getSrcDir = vsHelper.getSrcDir;
 export const getWorkspaceDir = vsHelper.getWorkspaceDir;

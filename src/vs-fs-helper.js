@@ -45,12 +45,13 @@ export const getScopeName = (fs) => async (inputPath) => {
     return scopeData.ALL_APPLICATIONS[appName].sys_scope;
 };
 
-export const getIncludeFilesWith = (fs) => (pathResolverFn) => async (
-    inputFile
-) =>
+export const getAllIncludeFiles = (fs) => async (inputFile) =>
     glob(
         path.join(
-            glob.escapePath(pathResolverFn(inputFile)),
+            glob.escapePath(getWorkspaceDir(fs)(inputFile)),
+            '*',
+            config.sourceDir,
+            config.scriptIncludeDir,
             '**',
             `*.${config.scriptSubext}.${config.jsExt}`
         ),

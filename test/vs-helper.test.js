@@ -5,7 +5,6 @@ import { getMockFs } from './helper.js';
 
 import config from '../config/default.js';
 import { VsHelper } from '../src/vs-helper.js';
-import { passthroughFn } from '../src/utils.js';
 
 const workspaceName = 'workspaceName';
 const appName = 'appName';
@@ -40,17 +39,6 @@ test.beforeEach((t) => {
     t.context.sandbox = sinon.createSandbox();
 });
 
-test('Private getIncludeFilesWith works', async (t) => {
-    const spy = t.context.sandbox.spy(passthroughFn);
-    const inputFile = '/fakepath/fakefile.js';
-    const testableFn = vsHelper.priv.getIncludeFilesWith(spy);
-    await testableFn(inputFile);
-    t.assert(
-        spy.calledOnceWith(inputFile),
-        'Resolver function should be called once'
-    );
-});
-
 test('Private getLibraryOutputFileName works', (t) => {
     const expected = `deeply_nested_path_MyScriptInclude.${normalScriptExt}`;
     const res = vsHelper.priv.getLibraryOutputFileName()(inputLibraryFile);
@@ -66,12 +54,6 @@ test('Private getOutDir works', (t) => {
 test('Private getSourceDir works', (t) => {
     const expected = `/${workspaceName}/${appName}/${config.sourceDir}`;
     const res = vsHelper.priv.getSourceDir(inputNormalFile);
-    t.is(res, expected);
-});
-
-test('Private getWorkspaceDir works', (t) => {
-    const expected = `/${workspaceName}`;
-    const res = vsHelper.priv.getWorkspaceDir(inputNormalFile);
     t.is(res, expected);
 });
 

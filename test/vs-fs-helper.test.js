@@ -46,6 +46,15 @@ test('Private getAppName works', (t) => {
     t.is(res, expected);
 });
 
+test('getAllIncludeFiles works', async (t) => {
+    const expected = [
+        `/${workspaceName}/A Normal Scoped Application/${config.sourceDir}/${config.scriptIncludeDir}/a_scoped_script_include.${config.scriptSubext}.${config.jsExt}`,
+        `/${workspaceName}/${appName}/${config.sourceDir}/${config.scriptIncludeDir}/helper/helper.${config.scriptSubext}.${config.jsExt}`,
+    ];
+    const res = await me.getAllIncludeFiles(newMockFs())(inputFilePath);
+    t.deepEqual(res, expected);
+});
+
 test('getAppDir works', (t) => {
     const expected = `/${workspaceName}/${appName}`;
     const res = me.getAppDir(newMockFs())(inputFilePath);

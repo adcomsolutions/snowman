@@ -13,11 +13,16 @@ export const getMockFs = (
     fakeFilePaths
 ) => {
     const appPrefix = `${workspaceName}/${appName}`;
+    const scopedDummyName = 'A Normal Scoped Application';
+    const scopedDummyScope = 'x_admso_scopeddummy';
+    const scopedDummyPrefix = `${workspaceName}/${scopedDummyName}`;
 
     const fakeProject = {
         [`/${appPrefix}/${config.outDir}/Server Development/Business Rules/helper`]: {},
         [`/${appPrefix}/${config.sourceDir}/${config.scriptIncludeDir}/helper/helper.${config.scriptSubext}.${config.jsExt}`]: 'const helper = {foo: "bar"};',
         [`/${workspaceName}/${config.libName}/${config.outDir}/${config.scriptIncludeDir}/lib.${config.jsExt}`]: 'var lib = "foobar"',
+        [`/${scopedDummyPrefix}/${config.sourceDir}/${config.scriptIncludeDir}/a_scoped_script_include.${config.scriptSubext}.${config.jsExt}`]: 'export default const "foobar";',
+        [`/${scopedDummyPrefix}/${config.outDir}/${config.scriptIncludeDir}/a_scoped_script_include.${config.jsExt}`]: 'var a_scoped_script_include = "foobar";',
         [`/${workspaceName}/system/sn-workspace.json`]: JSON.stringify({
             ALL_APPLICATIONS: {
                 [appName]: {
@@ -28,6 +33,11 @@ export const getMockFs = (
                 [config.libName]: {
                     sys_id: 'caaaaaaaaaa28c9014cec7ec0b961921',
                     sys_scope: libScope,
+                    package_type: 'sys_app',
+                },
+                [scopedDummyName]: {
+                    sys_id: 'daaaaaaaaaa28c9014cec7ec0b961921',
+                    sys_scope: scopedDummyScope,
                     package_type: 'sys_app',
                 },
             },
