@@ -4,6 +4,8 @@ import config from '../src/config-helper.js';
 import rollupSynthetic from './rollup-enable-synthetic-imports.js';
 import rollupExportFix from './rollup-named-export-to-default.js';
 
+import includePaths from 'rollup-plugin-includepaths';
+import includePathsConfig from './includepaths-rollup.js';
 import rollupBabel from '@rollup/plugin-babel';
 import rollupBabelConfig from './babel-rollup.js';
 import rollupAlias from '@rollup/plugin-alias';
@@ -23,6 +25,7 @@ export default (inputFile) => {
             plugins: [
                 rollupBabel.babel(rollupBabelConfig),
                 rollupAlias(mainAliasConfig(inputFile)),
+                includePaths(includePathsConfig(inputFile)),
                 rollupSynthetic,
                 rollupExportFix,
             ],
