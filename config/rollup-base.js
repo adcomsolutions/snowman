@@ -1,4 +1,5 @@
 import { getOutputFilePath } from '../src/vs-helper.js';
+import config from '../src/config-helper.js';
 
 import rollupSynthetic from './rollup-enable-synthetic-imports.js';
 import rollupExportFix from './rollup-named-export-to-default.js';
@@ -7,7 +8,6 @@ import rollupBabel from '@rollup/plugin-babel';
 import rollupBabelConfig from './babel-rollup.js';
 import rollupAlias from '@rollup/plugin-alias';
 import { mainAliasConfig } from './alias-rollup.js';
-import config from './default.js';
 
 const bundleBanner = [
     '/* eslint-disable */',
