@@ -18,6 +18,11 @@ const getYargsData = (myYargs) => {
 export const getConfigYargs = () => {
     const myYargs = newYargs();
 
+    // Set up watch mode flag
+    myYargs.boolean('watch');
+    myYargs.default('watch', false);
+    myYargs.alias('watch', 'w');
+
     // Set up verbose logging flag
     myYargs.boolean('verbose');
     myYargs.default('verbose', false);

@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-import { resolve } from 'path';
-
-import { doBuild } from './src/build-helper.js';
+import config from './src/config-helper.js';
+import { doBuild, bindWatchers } from './src/build-helper.js';
 import { getFileYargs } from './src/yargs-helper.js';
+
+import { resolve } from 'path';
 
 const resolveLocalFile = (_) => resolve(process.cwd(), _);
 
@@ -13,3 +14,5 @@ const backgroundSrcFiles = buildFiles.background.map(resolveLocalFile);
 const includesSrcFiles = buildFiles.includes.map(resolveLocalFile);
 
 doBuild(backgroundSrcFiles, includesSrcFiles);
+
+if (config.watch) bindWatchers(backgroundSrcFiles, includesSrcFiles);

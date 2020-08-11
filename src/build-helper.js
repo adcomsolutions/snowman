@@ -6,6 +6,7 @@ import rollupIncludesConfig from '../config/rollup-includes.js';
 
 import { readFile, writeFile } from 'fs/promises';
 
+import chokidar from 'chokidar';
 import { rollup } from 'rollup';
 
 // Scoped apps throw if you try to access __proto__, remap such attempts to the "type" field
@@ -58,4 +59,32 @@ export const doBuild = (backgroundFiles = [], includesFiles = []) => {
     buildPList
         .filter(invertFn(testNullish))
         .forEach((buildGroup) => buildGroup.map(logBuiltFile));
+};
+
+const bindBackgroundWatcher = (backgroundFiles = []) => {
+    if (!backgroundFiles.length) return null;
+    const watcher = chokidar.watch(backgroundFiles, {
+        persistent: true,
+    });
+    watcher.on('change', (path) => doBuild([path]));
+    return watcher.close;
+};
+
+const bindIncludesWatcher = (includesFiles = []) => {
+    if (!includesFiles.length) return null;
+    const watcher = chokidar.watch(includesFiles, {
+        persistent: true,
+    });
+    watcher.on('change', (path) => doBuild(undefined, [path]));
+    return watcher.close;
+};
+
+export const bindWatchers = (backgroundFiles = [], includesFiles = []) => {
+    const watchers = [
+        bindBackgroundWatcher(backgroundFiles),
+        bindIncludesWatcher(includesFiles),
+    ].filter((_) => _ !== null);
+
+    return async () =>
+        Promise.allSettled(watchers.map((unbindFn) => unbindFn()));
 };
