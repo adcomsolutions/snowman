@@ -23,6 +23,11 @@ export const getConfigYargs = () => {
     myYargs.default('watch', false);
     myYargs.alias('watch', 'w');
 
+    // Set up sync mode flag
+    myYargs.boolean('sync');
+    myYargs.default('sync', true);
+    myYargs.alias('sync', 's');
+
     // Set up verbose logging flag
     myYargs.boolean('verbose');
     myYargs.default('verbose', false);

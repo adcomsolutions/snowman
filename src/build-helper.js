@@ -3,6 +3,7 @@ import { asyncSequential, debugLog, verboseLog } from './debug-helper.js';
 import { invertFn, testNullish } from './utils.js';
 import rollupBackgroundConfig from '../config/rollup-background.js';
 import rollupIncludesConfig from '../config/rollup-includes.js';
+import { updateScript } from './sync-helper.js';
 
 import { readFile, writeFile } from 'fs/promises';
 
@@ -48,17 +49,42 @@ const logBuiltFile = async (rollupResultP) => {
     console.log(`Built file: ${output[0].fileName}`);
 };
 
+const syncBuiltFile = async (rollupResultP) => {
+    const rollupResult = await rollupResultP;
+    if (!rollupResult) return;
+
+    const [
+        {
+            output: [{ code, fileName: shortName }],
+        },
+        {
+            output: { file },
+        },
+    ] = rollupResult;
+
+    verboseLog('Preparing to sync file:', shortName);
+
+    const updateP = updateScript(file, code)
+        .then(() => console.log('Synced file:', shortName))
+        .catch((error) =>
+            console.error(`Sync failed for file ${file} with error:\n${error}`)
+        );
+
+    return updateP;
+};
+
 export const doBuild = (backgroundFiles = [], includesFiles = []) => {
     debugLog('Snowman Config Data:', config);
 
     const buildPList = [
         backgroundFiles.map(buildBundle(rollupBackgroundConfig)),
         includesFiles.map(buildBundle(rollupIncludesConfig)),
-    ];
+    ].filter(invertFn(testNullish));
 
-    buildPList
-        .filter(invertFn(testNullish))
-        .forEach((buildGroup) => buildGroup.map(logBuiltFile));
+    buildPList.forEach((buildGroup) => buildGroup.map(logBuiltFile));
+
+    if (config.sync)
+        buildPList.forEach((buildGroup) => buildGroup.map(syncBuiltFile));
 };
 
 const bindBackgroundWatcher = (backgroundFiles = []) => {
