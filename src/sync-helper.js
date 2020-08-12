@@ -54,5 +54,8 @@ export const updateScript = async (builtFilePath, code) => {
             'This file appears to have never been synced to the server by VSCode. Aborting sync!'
         );
 
-    return patch(`${tableName}/${fileId}`, { [fieldName]: code });
+    return patch(
+        `${tableName}/${fileId}?sysparm_suppress_auto_sys_field=true`,
+        { [fieldName]: code }
+    );
 };
