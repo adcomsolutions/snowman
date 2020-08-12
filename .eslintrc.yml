@@ -1,4 +1,4 @@
-parser: babel-eslint
+parser: "@babel/eslint-parser"
 extends:
   - semistandard
   - plugin:unicorn/recommended
@@ -8,6 +8,7 @@ extends:
 parserOptions:
   ecmaVersion: 2020
   sourceType: module
+  requireConfigFile: false
 
 plugins:
   - prettier
