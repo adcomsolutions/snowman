@@ -13,6 +13,5 @@ const backgroundSrcFiles = buildFiles.background.map(resolveLocalFile);
 // Script Includes that must add their own variable to scope
 const includesSrcFiles = buildFiles.includes.map(resolveLocalFile);
 
-doBuild(backgroundSrcFiles, includesSrcFiles);
-
 if (config.watch) bindWatchers(backgroundSrcFiles, includesSrcFiles);
+else doBuild(backgroundSrcFiles, includesSrcFiles);
