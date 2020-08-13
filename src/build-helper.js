@@ -16,24 +16,35 @@ import { rollup } from 'rollup';
 const fixNsProto = (fileContents) =>
     fileContents.replace(/__proto__: null/g, 'type: null');
 
-export const postProcessOutput = async (outputFilePath) => {
+const postProcessOutput = async (outputFilePath) => {
+    verboseLog(`Post-processing file: ${outputFilePath}`);
     const originalContents = await readFile(outputFilePath, 'utf8');
     return writeFile(outputFilePath, fixNsProto(originalContents));
 };
 
-const buildBundleAsync = (rollupOptions) => async (inputFile) => {
-    verboseLog(`Processing configuration: ${inputFile}`);
-    const options = await rollupOptions(inputFile);
-    debugLog('Build options used:', options);
-    verboseLog(`Compiling script: ${inputFile}`);
-    const bundle = await rollup(options.input).catch(console.error);
+const compileBundle = async (optionsP) => {
+    const options = await optionsP;
+    debugLog('Rollup options used:', options);
+    verboseLog(`Compiling script: ${options.input.input}`);
+    return rollup(options.input);
+};
+
+const writeBundle = async (bundleP, optionsP) => {
+    const { output: outputOptions } = await optionsP;
+    const bundle = await bundleP.catch(console.error);
     if (bundle === undefined) return null;
-    verboseLog(`Writing artefact: ${inputFile}`);
-    const bundleOut = await bundle.write(options.output);
-    return postProcessOutput(options.output.file).then(() => [
-        bundleOut,
-        options,
-    ]);
+
+    verboseLog(`Writing artefact: ${outputOptions.file}`);
+    const {
+        output: [writeResult],
+    } = await bundle.write(outputOptions);
+    await postProcessOutput(outputOptions.file);
+    return { ...writeResult, file: outputOptions.file };
+};
+
+const buildBundleAsync = (rollupOptionsFn) => (inputFile) => {
+    const rollupOptionsP = rollupOptionsFn(inputFile);
+    return writeBundle(compileBundle(rollupOptionsP), rollupOptionsP);
 };
 
 const buildBundleSequential = (rollupOptions) =>
@@ -41,36 +52,31 @@ const buildBundleSequential = (rollupOptions) =>
 
 const buildBundle = config.debug ? buildBundleSequential : buildBundleAsync;
 
-const logBuiltFile = async (rollupResultP) => {
-    const rollupResult = await rollupResultP;
-    if (!rollupResult) return;
-    const [{ output }] = rollupResult;
-    console.log(`Built file: ${output[0].fileName}`);
-};
+const buildGroupProcessor = (processorFn) => (buildGroup) =>
+    buildGroup.forEach(async (buildP) => {
+        const buildResult = await buildP;
+        return buildResult === null ? null : processorFn(buildResult);
+    });
 
-const syncBuiltFile = async (rollupResultP) => {
-    const rollupResult = await rollupResultP;
-    if (!rollupResult) return;
+const logBuiltFile = buildGroupProcessor(({ fileName }) =>
+    console.log(`Built file: ${fileName}`)
+);
 
-    const [
-        {
-            output: [{ code, fileName: shortName }],
-        },
-        {
-            output: { file },
-        },
-    ] = rollupResult;
+const syncBuiltFile = buildGroupProcessor(
+    ({ code, file, fileName: shortName }) => {
+        verboseLog('Preparing to sync file:', shortName);
 
-    verboseLog('Preparing to sync file:', shortName);
+        const updateP = updateScript(file, code)
+            .then(() => console.log('Synced file:', shortName))
+            .catch((error) =>
+                console.error(
+                    `Sync failed for file ${file} with error:\n${error}`
+                )
+            );
 
-    const updateP = updateScript(file, code)
-        .then(() => console.log('Synced file:', shortName))
-        .catch((error) =>
-            console.error(`Sync failed for file ${file} with error:\n${error}`)
-        );
-
-    return updateP;
-};
+        return updateP;
+    }
+);
 
 export const doBuild = (backgroundFiles = [], includesFiles = []) => {
     debugLog('Snowman Config Data:', config);
@@ -80,10 +86,9 @@ export const doBuild = (backgroundFiles = [], includesFiles = []) => {
         includesFiles.map(buildBundle(rollupIncludesConfig)),
     ];
 
-    buildPList.forEach((buildGroup) => buildGroup.map(logBuiltFile));
+    buildPList.forEach(logBuiltFile);
 
-    if (config.sync)
-        buildPList.forEach((buildGroup) => buildGroup.map(syncBuiltFile));
+    if (config.sync) buildPList.forEach(syncBuiltFile);
 };
 
 const bindBackgroundWatcher = (backgroundFiles = []) => {
@@ -108,7 +113,7 @@ export const bindWatchers = (backgroundFiles = [], includesFiles = []) => {
     const watchers = [
         bindBackgroundWatcher(backgroundFiles),
         bindIncludesWatcher(includesFiles),
-    ].filter((_) => _ !== null);
+    ];
 
     return async () =>
         Promise.allSettled(watchers.map((unbindFn) => unbindFn()));
