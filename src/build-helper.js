@@ -1,6 +1,5 @@
 import config from './config-helper.js';
 import { asyncSequential, debugLog, verboseLog } from './debug-helper.js';
-import { invertFn, testNullish } from './utils.js';
 import rollupBackgroundConfig from '../config/rollup-background.js';
 import rollupIncludesConfig from '../config/rollup-includes.js';
 import { updateScript } from './sync-helper.js';
@@ -79,7 +78,7 @@ export const doBuild = (backgroundFiles = [], includesFiles = []) => {
     const buildPList = [
         backgroundFiles.map(buildBundle(rollupBackgroundConfig)),
         includesFiles.map(buildBundle(rollupIncludesConfig)),
-    ].filter(invertFn(testNullish));
+    ];
 
     buildPList.forEach((buildGroup) => buildGroup.map(logBuiltFile));
 
