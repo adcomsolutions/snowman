@@ -9,6 +9,8 @@ export default {
     exclude: 'node_modules/**',
     babelrc: false,
     babelHelpers: 'external',
+    compact: false,
+    retainLines: true,
     plugins: [
         ['@babel/plugin-external-helpers'],
         ['@babel/plugin-transform-for-of', { loose: true }],
