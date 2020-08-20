@@ -1,4 +1,4 @@
-import { getOutputFilePath } from '../src/vs-helper.js';
+import { getOutputFilePath, getRelativeFilePath } from '../src/vs-helper.js';
 import config from '../src/config-helper.js';
 
 import rollupSynthetic from './rollup-enable-synthetic-imports.js';
@@ -11,10 +11,8 @@ import rollupBabelConfig from './babel-rollup.js';
 import rollupAlias from '@rollup/plugin-alias';
 import { mainAliasConfig } from './alias-rollup.js';
 
-const bundleBanner = [
-    '/* eslint-disable */',
-    `// Rollup file built on ${new Date().toGMTString()}`,
-].join('\n');
+const bundleBannerFn = (inputFile) =>
+    `/* eslint-disable */ // ${getRelativeFilePath(inputFile)}`;
 
 const babelHelperDeclaration = `var babelHelpers = ${config.babelHelperName};`;
 
@@ -32,7 +30,7 @@ export default (inputFile) => {
         },
         output: {
             file: getOutputFilePath(inputFile),
-            banner: bundleBanner,
+            banner: bundleBannerFn(inputFile),
             intro: babelHelperDeclaration,
             format: 'iife',
             strict: false,

@@ -64,6 +64,12 @@ test('getLibraryDir works', async (t) => {
     t.is(res, expected);
 });
 
+test('getRelativeFilePath works', (t) => {
+    const expected = `${appName}/mod/Server Development/Business Rules/${fakeRuleName}.${normalScriptExt}`;
+    const res = vsHelper.getRelativeFilePath(inputNormalFile);
+    t.is(res, expected);
+});
+
 test('getOutputFilePath works', (t) => {
     const outputFileFragment = `Server Development/Business Rules/${fakeRuleName}.${normalScriptExt}`;
     const expected = `${vsHelper.priv.getOutDir(

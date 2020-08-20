@@ -46,6 +46,12 @@ export const VsHelper = (fsLike) => {
     const getOutDir = (inputPath) =>
         path.join(getAppDir(inputPath), config.outDir);
 
+    const getRelativeFilePath = (inputFile) =>
+        path.join(
+            path.relative(getWorkspaceDir(inputFile), path.dirname(inputFile)),
+            path.basename(inputFile)
+        );
+
     const getOutputFilePath = (inputFile) =>
         path.join(
             getOutDir(inputFile),
@@ -102,6 +108,7 @@ export const VsHelper = (fsLike) => {
         getLibraryOutputBaseName,
         getLibraryOutputFilePath,
         getOutputFilePath,
+        getRelativeFilePath,
         getWorkspaceDir,
         getScopeName,
         getScriptIncludeDir,
@@ -120,6 +127,7 @@ export const getLibraryDir = vsHelper.getLibraryDir;
 export const getLibraryOutputBaseName = vsHelper.getLibraryOutputBaseName;
 export const getLibraryOutputFilePath = vsHelper.getLibraryOutputFilePath;
 export const getOutputFilePath = vsHelper.getOutputFilePath;
+export const getRelativeFilePath = vsHelper.getRelativeFilePath;
 export const getScopeName = vsHelper.getScopeName;
 export const getScriptIncludeDir = vsHelper.getScriptIncludeDir;
 export const getSrcDir = vsHelper.getSrcDir;
