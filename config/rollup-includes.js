@@ -5,6 +5,7 @@ import {
 } from '../src/vs-helper.js';
 
 import rollupBackground from './rollup-background.js';
+import rollupJsdocFix from './rollup-fix-default-jsdoc.js';
 
 export default async (inputFile) => {
     const outputName = getLibraryOutputBaseName(inputFile);
@@ -13,6 +14,7 @@ export default async (inputFile) => {
         output: {
             file: getLibraryOutputFilePath(inputFile),
             name: outputName,
+            plugins: [rollupJsdocFix],
         },
     });
 };
