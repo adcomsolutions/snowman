@@ -5,7 +5,9 @@ const warnMixedExport = (id) =>
 
 // Default class exports become named exports with empty declaration properties in AST (maybe because of babel transpilation?)
 const isFakeNamedExport = (astNode) =>
-    astNode.type === 'ExportNamedDeclaration' && astNode.declaration === null;
+    astNode.type === 'ExportNamedDeclaration' &&
+    astNode.declaration === null &&
+    astNode.source === null;
 
 export default {
     async transform(code, id) {
@@ -15,6 +17,8 @@ export default {
 
         const ast = this.parse(code);
         const myCode = code.split('');
+        const exportKeyword = 'export';
+        const importKeyword = 'import';
         const myExports = [];
         let hasDefault = false;
         let offset = 0;
@@ -30,25 +34,40 @@ export default {
                     hasDefault = true;
                     if (myExports.length) warnMixedExport(id);
                 } else if (_.type === 'ExportNamedDeclaration') {
-                    const start = _.start - offset;
-                    const end = _.declaration.start - offset;
-                    const length = end - start;
+                    // Handle re-exports as import/export pairs
+                    if (_.source === null) {
+                        const start = _.start - offset;
+                        const end = _.declaration.start - offset;
+                        const length = end - start;
 
-                    // Warn about default exports if mixed with named exports
-                    if (hasDefault) warnMixedExport(id);
+                        // Warn about default exports if mixed with named exports
+                        if (hasDefault) warnMixedExport(id);
 
-                    // Strip export keyword from named exports
-                    myCode.splice(start, length);
-                    offset += length;
+                        // Strip export keyword from named exports
+                        myCode.splice(start, length);
+                        offset += length;
 
-                    // Save named exports to list
-                    _.declaration.declarations.forEach((declaration) =>
-                        myExports.push(declaration.id.name)
-                    );
+                        // Save named exports to list
+                        _.declaration.declarations.forEach((declaration) =>
+                            myExports.push(declaration.id.name)
+                        );
+                    } else {
+                        const start = _.start - offset;
+                        const end = start + exportKeyword.length;
+                        const length = end - start;
+
+                        myCode.splice(start, length, importKeyword);
+                        offset += length - 1;
+
+                        _.specifiers.forEach((exportSpecifiers) => {
+                            if (exportSpecifiers.exported?.name)
+                                myExports.push(exportSpecifiers.exported.name);
+                        });
+                    }
                 } else {
-                    // TODO: Figure out how to handle namespace imports and re-exports...
+                    // TODO: Figure out how to handle namespace imports
                     console.error(
-                        `ERROR: Currently only named or default exports are supported! This script will not work until any re-exports/namespace exports are removed (${id})`
+                        `ERROR: Currently only named OR default exports are supported! This script will not work until any namespace exports are removed (${id})`
                     );
                 }
             });
